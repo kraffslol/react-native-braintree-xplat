@@ -1,7 +1,7 @@
 node_modules/**/*
 build
-RCTBraintree.xcodeproj/xcuserdata/**/*
-RCTBraintree.xcodeproj/project.xcworkspace/**/*
+ios/RCTBraintree.xcodeproj/xcuserdata/**/*
+ios/RCTBraintree.xcodeproj/project.xcworkspace/**/*
 .idea
 .gradle/
 gradlew
