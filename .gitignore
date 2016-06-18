@@ -1,0 +1,10 @@
+node_modules/**/*
+build
+.idea
+.gradle/
+gradlew
+gradlew.bat
+gradle/
+*.properties
+*.iml
+npm-debug.log

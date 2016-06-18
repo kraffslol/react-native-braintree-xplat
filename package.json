@@ -1,0 +1,16 @@
+{
+  "name": "react-native-braintree",
+  "version": "0.0.1",
+  "description": "Cross platform Braintree module",
+  "main": "index",
+  "author": {
+    "name": "Rickard Ekman",
+    "email": "rickard@swiftpulse.com",
+    "url": "https://github.com/kraffslol"
+  },
+  "license": "MIT",
+  "respository": {
+    "type": "git",
+    "url": "git@github.com:kraffslol/react-native-braintree.git"
+  }
+}
