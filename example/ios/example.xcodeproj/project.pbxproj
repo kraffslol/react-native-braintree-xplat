@@ -22,7 +22,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		DE4F06FF1D157073005F99CD /* libRCTBraintree.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE4F06FE1D157068005F99CD /* libRCTBraintree.a */; };
+		DE6D1C351D16E93000DA995F /* libRCTBraintree.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE6D1C2B1D16E91400DA995F /* libRCTBraintree.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,9 +103,9 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
-		DE4F06FD1D157068005F99CD /* PBXContainerItemProxy */ = {
+		DE6D1C2A1D16E91400DA995F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = DE4F06F91D157068005F99CD /* RCTBraintree.xcodeproj */;
+			containerPortal = DE6D1C241D16E91300DA995F /* RCTBraintree.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DE4F06CC1D156AA8005F99CD;
 			remoteInfo = RCTBraintree;
@@ -134,7 +134,7 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
-		DE4F06F91D157068005F99CD /* RCTBraintree.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBraintree.xcodeproj; path = "../node_modules/react-native-braintree/ios/RCTBraintree.xcodeproj"; sourceTree = "<group>"; };
+		DE6D1C241D16E91300DA995F /* RCTBraintree.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBraintree.xcodeproj; path = "../node_modules/react-native-braintree-xplat/ios/RCTBraintree.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,7 +159,7 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				DE4F06FF1D157073005F99CD /* libRCTBraintree.a in Frameworks */,
+				DE6D1C351D16E93000DA995F /* libRCTBraintree.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,7 +272,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				DE4F06F91D157068005F99CD /* RCTBraintree.xcodeproj */,
+				DE6D1C241D16E91300DA995F /* RCTBraintree.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
 				00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */,
@@ -316,10 +316,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		DE4F06FA1D157068005F99CD /* Products */ = {
+		DE6D1C251D16E91300DA995F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DE4F06FE1D157068005F99CD /* libRCTBraintree.a */,
+				DE6D1C2B1D16E91400DA995F /* libRCTBraintree.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -395,8 +395,8 @@
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
 				},
 				{
-					ProductGroup = DE4F06FA1D157068005F99CD /* Products */;
-					ProjectRef = DE4F06F91D157068005F99CD /* RCTBraintree.xcodeproj */;
+					ProductGroup = DE6D1C251D16E91300DA995F /* Products */;
+					ProjectRef = DE6D1C241D16E91300DA995F /* RCTBraintree.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
@@ -514,11 +514,11 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		DE4F06FE1D157068005F99CD /* libRCTBraintree.a */ = {
+		DE6D1C2B1D16E91400DA995F /* libRCTBraintree.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libRCTBraintree.a;
-			remoteRef = DE4F06FD1D157068005F99CD /* PBXContainerItemProxy */;
+			remoteRef = DE6D1C2A1D16E91400DA995F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

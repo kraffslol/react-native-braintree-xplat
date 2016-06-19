@@ -1,4 +1,4 @@
-# react-native-braintree
+# react-native-braintree-xplat
 WIP
 An attempt to merge react-native-braintree and react-native-braintree-android
 
