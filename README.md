@@ -45,13 +45,17 @@ BTClient.getCardNonce("4111111111111111", "10", "20").then(function(nonce) {
 ```
 
 ## Installation IOS
+You can use [`rnpm`](https://github.com/rnpm/rnpm) to add native dependencies automatically:
+
+`$ rnpm link`
+
+or do it manually as described below:
+
 1. Run `npm install react-native-braintree-xplat --save`
 2. Open your project in XCode, right click on `Libraries` and click `Add
    Files to "Your Project Name"` Look under `node_modules/react-native-linear-gradient` and add `RCTBraintree.xcodeproj`.
 3. Add `libRCTBraintree.a` to `Build Phases -> Link Binary With Libraries`
 4. Done!
-
-TODO: Add screenshots & test if rnpm works.
 
 ## Credits
 
