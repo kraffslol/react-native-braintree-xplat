@@ -59,4 +59,4 @@ or do it manually as described below:
 
 ## Credits
 
-All credits go to Alan Wong for the ios module.
+All credits go to [@alawong](https://github.com/alawong) for the ios module.
