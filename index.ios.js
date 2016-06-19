@@ -1,6 +1,6 @@
 'use strict';
 
-import { NativeModules } from 'react-native';
+import { NativeModules, processColor } from 'react-native';
 var RCTBraintree = NativeModules.Braintree;
 
 var Braintree = {
@@ -21,9 +21,16 @@ var Braintree = {
 		});
 	},
 
-	showPaymentViewController() {
+	showPaymentViewController(config = {}) {
+    var options = {
+      tintColor: processColor(config.tintColor),
+      bgColor: processColor(config.bgColor),
+      barBgColor: processColor(config.barBgColor),
+      barTintColor: processColor(config.barTintColor),
+    };
+    console.log(options)
 		return new Promise(function(resolve, reject) {
-			RCTBraintree.showPaymentViewController(function(err, nonce) {
+			RCTBraintree.showPaymentViewController(options, function(err, nonce) {
 				nonce != null ? resolve(nonce) : reject(err);
 			});
 		});

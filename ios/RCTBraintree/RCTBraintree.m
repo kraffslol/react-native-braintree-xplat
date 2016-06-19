@@ -8,6 +8,7 @@
 
 #import "RCTBraintree.h"
 #import "RCTUtils.h"
+#import "RCTConvert.h"
 
 @implementation RCTBraintree
 
@@ -48,17 +49,30 @@ RCT_EXPORT_METHOD(setup:(NSString *)clientToken callback:(RCTResponseSenderBlock
     }
 }
 
-RCT_EXPORT_METHOD(showPaymentViewController:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(showPaymentViewController:(NSDictionary *)options callback:(RCTResponseSenderBlock)callback)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         BTDropInViewController *dropInViewController = [[BTDropInViewController alloc] initWithAPIClient:self.braintreeClient];
         dropInViewController.delegate = self;
+        
+        NSLog(@"%@", options);
+        
+        UIColor *tintColor = options[@"tintColor"];
+        UIColor *bgColor = options[@"bgColor"];
+        UIColor *barBgColor = options[@"barBgColor"];
+        UIColor *barTintColor = options[@"barTintColor"];
+        
+        if (tintColor) dropInViewController.view.tintColor = [RCTConvert UIColor:tintColor];
+        if (bgColor) dropInViewController.view.backgroundColor = [RCTConvert UIColor:bgColor];
         
         dropInViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(userDidCancelPayment)];
         
         self.callback = callback;
         
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:dropInViewController];
+        
+        if (barBgColor) navigationController.navigationBar.barTintColor = [RCTConvert UIColor:barBgColor];
+        if (barTintColor) navigationController.navigationBar.tintColor = [RCTConvert UIColor:barTintColor];
         
         self.reactRoot = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
         [self.reactRoot presentViewController:navigationController animated:YES completion:nil];
