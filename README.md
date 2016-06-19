@@ -22,6 +22,21 @@ BTClient.showPaymentViewController(options).then(function(nonce) {
   //error handling
 });
 ```
+**Options**
+- bgColor - Background color for the view.
+- tintColor - Tint color for the view.
+- barBgColor - Background color for the navbar.
+- barTintColor - Tint color for the navbar.
+
+Example:
+```js
+const options = {
+  bgColor: '#FFF',
+  tintColor: 'orange'
+}
+```
+
+___
 
 PayPal only
 ```js
