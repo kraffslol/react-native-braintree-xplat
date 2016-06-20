@@ -7,8 +7,11 @@ import com.facebook.react.shell.MainReactPackage;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends ReactActivity {
+import com.pw.droplet.braintree.BraintreePackage;
+import android.content.Intent;
 
+public class MainActivity extends ReactActivity {
+    private BraintreePackage mBraintreePackage;
     /**
      * Returns the name of the main component registered from JavaScript.
      * This is used to schedule rendering of the component.
@@ -34,7 +37,15 @@ public class MainActivity extends ReactActivity {
     @Override
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
-            new MainReactPackage()
+            new MainReactPackage(),
+            mBraintreePackage = new BraintreePackage(this)
         );
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        mBraintreePackage.handleActivityResult(requestCode, resultCode, data);
     }
 }
