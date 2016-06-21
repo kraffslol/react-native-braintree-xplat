@@ -11,7 +11,7 @@ or do it manually as described below:
 
 1. Run `npm install react-native-braintree-xplat --save`
 2. Open your project in XCode, right click on `Libraries` and click `Add
-   Files to "Your Project Name"` Look under `node_modules/react-native-linear-gradient` and add `RCTBraintree.xcodeproj`.
+   Files to "Your Project Name"` Look under `node_modules/react-native-braintree-xplat` and add `RCTBraintree.xcodeproj`.
 3. Add `libRCTBraintree.a` to `Build Phases -> Link Binary With Libraries`
 4. Done!
 
