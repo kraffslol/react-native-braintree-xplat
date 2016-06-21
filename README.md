@@ -145,4 +145,4 @@ BTClient.getCardNonce("4111111111111111", "10", "20").then(function(nonce) {
 
 ## Credits
 
-All credits go to [@alawong](https://github.com/alawong) for the ios module.
+All credits go to [@alawong](https://github.com/alawong) for the ios module and [@surialabs](https://github.com/surialabs) for the android module.
