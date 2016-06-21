@@ -15,6 +15,7 @@ import com.facebook.react.bridge.ReactMethod;
 
 public class Braintree extends ReactContextBaseJavaModule {
   private static final int PAYMENT_REQUEST = 1;
+  private String token;
 
   private Callback successCallback;
   private Callback errorCallback;
@@ -31,13 +32,27 @@ public class Braintree extends ReactContextBaseJavaModule {
     return "Braintree";
   }
 
+  public String getToken() {
+    return this.token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
+  }
+
   @ReactMethod
-  public void paymentRequest(final String clientToken, final Callback successCallback, final Callback errorCallback) {
+  public void setup(final String token, final Callback successCallback) {
+    this.setToken(token);
+    successCallback.invoke(this.getToken());
+  }
+
+  @ReactMethod
+  public void paymentRequest(final Callback successCallback, final Callback errorCallback) {
     this.successCallback = successCallback;
     this.errorCallback = errorCallback;
 
     PaymentRequest paymentRequest = new PaymentRequest()
-    .clientToken(clientToken);
+    .clientToken(this.getToken());
 
     ((Activity)this.mActivityContext).startActivityForResult(
       paymentRequest.getIntent(this.mActivityContext),
