@@ -1,4 +1,5 @@
 # react-native-braintree-xplat
+[![npm version](https://badge.fury.io/js/react-native-braintree-xplat.svg)](https://badge.fury.io/js/react-native-braintree-xplat)
 
 An effort to merge react-native-braintree and react-native-braintree-android
 
@@ -145,4 +146,4 @@ BTClient.getCardNonce("4111111111111111", "10", "20").then(function(nonce) {
 
 ## Credits
 
-All credits go to [@alanhhwong](https://github.com/alanhhwong) for the ios module and [@surialabs](https://github.com/surialabs) for the android module.
+Big thanks to [@alanhhwong](https://github.com/alanhhwong) and [@surialabs](https://github.com/surialabs) for the original ios & android modules.
