@@ -7,6 +7,11 @@ import android.app.Activity;
 import com.braintreepayments.api.PaymentRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.BraintreePaymentActivity;
+import com.braintreepayments.api.BraintreeFragment;
+import com.braintreepayments.api.exceptions.InvalidArgumentException;
+import com.braintreepayments.api.models.CardBuilder;
+import com.braintreepayments.api.Card;
+import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -21,6 +26,8 @@ public class Braintree extends ReactContextBaseJavaModule {
   private Callback errorCallback;
 
   private Context mActivityContext;
+
+  private BraintreeFragment mBraintreeFragment;
 
   public Braintree(ReactApplicationContext reactContext, Context activityContext) {
     super(reactContext);
@@ -41,9 +48,37 @@ public class Braintree extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void setup(final String token, final Callback successCallback) {
-    this.setToken(token);
-    successCallback.invoke(this.getToken());
+  public void setup(final String token, final Callback successCallback, final Callback errorCallback) {
+    try {
+      this.mBraintreeFragment = BraintreeFragment.newInstance((Activity)this.mActivityContext, token);
+      this.mBraintreeFragment.addListener(new PaymentMethodNonceCreatedListener() {
+        @Override
+        public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
+          nonceCallback(paymentMethodNonce.getNonce());
+        }
+      });
+      this.setToken(token);
+      successCallback.invoke(this.getToken());
+    } catch (InvalidArgumentException e) {
+      errorCallback.invoke(e.getMessage());
+    }
+  }
+
+  @ReactMethod
+  public void getCardNonce(final String cardNumber, final String expirationMonth, final String expirationYear, final Callback successCallback, final Callback errorCallback) {
+    this.successCallback = successCallback;
+    this.errorCallback = errorCallback;
+
+    CardBuilder cardBuilder = new CardBuilder()
+      .cardNumber(cardNumber)
+      .expirationMonth(expirationMonth)
+      .expirationYear(expirationYear);
+
+    Card.tokenize(this.mBraintreeFragment, cardBuilder);
+  }
+
+  public void nonceCallback(String nonce) {
+    this.successCallback.invoke(nonce);
   }
 
   @ReactMethod
