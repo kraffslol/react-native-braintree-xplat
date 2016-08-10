@@ -108,11 +108,12 @@ RCT_EXPORT_METHOD(showPayPalViewController:(RCTResponseSenderBlock)callback)
 RCT_EXPORT_METHOD(getCardNonce: (NSString *)cardNumber
                   expirationMonth: (NSString *)expirationMonth
                   expirationYear: (NSString *)expirationYear
+                  cvv: (NSString *)cvv
                   callback: (RCTResponseSenderBlock)callback
                   )
 {
     BTCardClient *cardClient = [[BTCardClient alloc] initWithAPIClient: self.braintreeClient];
-    BTCard *card = [[BTCard alloc] initWithNumber:cardNumber expirationMonth:expirationMonth expirationYear:expirationYear cvv:nil];
+    BTCard *card = [[BTCard alloc] initWithNumber:cardNumber expirationMonth:expirationMonth expirationYear:expirationYear cvv:cvv];
 
     [cardClient tokenizeCard:card
                   completion:^(BTCardNonce *tokenizedCard, NSError *error) {
