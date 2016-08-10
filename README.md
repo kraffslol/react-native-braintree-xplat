@@ -112,12 +112,14 @@ BTClient.showPaymentViewController(options).then(function(nonce) {
 - tintColor - Tint color for the view.
 - barBgColor - Background color for the navbar.
 - barTintColor - Tint color for the navbar.
+- callToActionText - Text for call to action button. (Works for both Android and iOS)
 
 Example:
 ```js
 const options = {
   bgColor: '#FFF',
-  tintColor: 'orange'
+  tintColor: 'orange',
+  callToActionText: 'Save'
 }
 ```
 

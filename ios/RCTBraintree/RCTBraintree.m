@@ -54,26 +54,31 @@ RCT_EXPORT_METHOD(showPaymentViewController:(NSDictionary *)options callback:(RC
     dispatch_async(dispatch_get_main_queue(), ^{
         BTDropInViewController *dropInViewController = [[BTDropInViewController alloc] initWithAPIClient:self.braintreeClient];
         dropInViewController.delegate = self;
-        
+
         NSLog(@"%@", options);
-        
+
         UIColor *tintColor = options[@"tintColor"];
         UIColor *bgColor = options[@"bgColor"];
         UIColor *barBgColor = options[@"barBgColor"];
         UIColor *barTintColor = options[@"barTintColor"];
-        
+
         if (tintColor) dropInViewController.view.tintColor = [RCTConvert UIColor:tintColor];
         if (bgColor) dropInViewController.view.backgroundColor = [RCTConvert UIColor:bgColor];
-        
+
         dropInViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(userDidCancelPayment)];
-        
+
         self.callback = callback;
-        
+
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:dropInViewController];
-        
+
         if (barBgColor) navigationController.navigationBar.barTintColor = [RCTConvert UIColor:barBgColor];
         if (barTintColor) navigationController.navigationBar.tintColor = [RCTConvert UIColor:barTintColor];
-        
+
+        BTPaymentRequest *paymentRequest = [[BTPaymentRequest alloc] init];
+        paymentRequest.callToActionText = options[@"callToActionText"];
+
+        dropInViewController.paymentRequest = paymentRequest;
+
         self.reactRoot = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
         [self.reactRoot presentViewController:navigationController animated:YES completion:nil];
     });
@@ -82,10 +87,10 @@ RCT_EXPORT_METHOD(showPaymentViewController:(NSDictionary *)options callback:(RC
 RCT_EXPORT_METHOD(showPayPalViewController:(RCTResponseSenderBlock)callback)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        
+
         BTPayPalDriver *payPalDriver = [[BTPayPalDriver alloc] initWithAPIClient:self.braintreeClient];
         payPalDriver.viewControllerPresentingDelegate = self;
-        
+
         [payPalDriver authorizeAccountWithCompletion:^(BTPayPalAccountNonce *tokenizedPayPalAccount, NSError *error) {
             NSArray *args = @[];
             if ( error == nil ) {
@@ -106,10 +111,10 @@ RCT_EXPORT_METHOD(getCardNonce: (NSString *)cardNumber
 {
     BTCardClient *cardClient = [[BTCardClient alloc] initWithAPIClient: self.braintreeClient];
     BTCard *card = [[BTCard alloc] initWithNumber:cardNumber expirationMonth:expirationMonth expirationYear:expirationYear cvv:nil];
-    
+
     [cardClient tokenizeCard:card
                   completion:^(BTCardNonce *tokenizedCard, NSError *error) {
-                      
+
                       NSArray *args = @[];
                       if ( error == nil ) {
                           args = @[[NSNull null], tokenizedCard.nonce];
@@ -122,7 +127,7 @@ RCT_EXPORT_METHOD(getCardNonce: (NSString *)cardNumber
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    
+
     if ([url.scheme localizedCaseInsensitiveCompare:URLScheme] == NSOrderedSame) {
         return [BTAppSwitch handleOpenURL:url sourceApplication:sourceApplication];
     }
@@ -149,7 +154,7 @@ RCT_EXPORT_METHOD(getCardNonce: (NSString *)cardNumber
 }
 
 - (void)dropInViewController:(BTDropInViewController *)viewController didSucceedWithTokenization:(BTPaymentMethodNonce *)paymentMethodNonce {
-    
+
     self.callback(@[[NSNull null],paymentMethodNonce.nonce]);
     [viewController dismissViewControllerAnimated:YES completion:nil];
 }
