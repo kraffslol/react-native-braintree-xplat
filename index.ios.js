@@ -27,7 +27,7 @@ var Braintree = {
       bgColor: processColor(config.bgColor),
       barBgColor: processColor(config.barBgColor),
       barTintColor: processColor(config.barTintColor),
-      callToActionText: config.callToActionText || 'Pay',
+      callToActionText: config.callToActionText,
     };
 		return new Promise(function(resolve, reject) {
 			RCTBraintree.showPaymentViewController(options, function(err, nonce) {

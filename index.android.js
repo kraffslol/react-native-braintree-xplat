@@ -18,7 +18,7 @@ module.exports = {
 
   showPaymentViewController(config = {}) {
     var options = {
-      callToActionText: config.callToActionText || 'Pay',
+      callToActionText: config.callToActionText,
     };
     return new Promise(function(resolve, reject) {
       Braintree.paymentRequest(options.callToActionText, (nonce) => resolve(nonce), (error) => reject(error));

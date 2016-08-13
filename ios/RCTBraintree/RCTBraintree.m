@@ -74,10 +74,12 @@ RCT_EXPORT_METHOD(showPaymentViewController:(NSDictionary *)options callback:(RC
         if (barBgColor) navigationController.navigationBar.barTintColor = [RCTConvert UIColor:barBgColor];
         if (barTintColor) navigationController.navigationBar.tintColor = [RCTConvert UIColor:barTintColor];
 
-        BTPaymentRequest *paymentRequest = [[BTPaymentRequest alloc] init];
-        paymentRequest.callToActionText = options[@"callToActionText"];
+        if (options[@"callToActionText"]) {
+            BTPaymentRequest *paymentRequest = [[BTPaymentRequest alloc] init];
+            paymentRequest.callToActionText = options[@"callToActionText"];
 
-        dropInViewController.paymentRequest = paymentRequest;
+            dropInViewController.paymentRequest = paymentRequest;
+        }
 
         self.reactRoot = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
         [self.reactRoot presentViewController:navigationController animated:YES completion:nil];
