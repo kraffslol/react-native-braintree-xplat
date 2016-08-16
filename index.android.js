@@ -16,9 +16,12 @@ module.exports = {
     });
   },
 
-  showPaymentViewController() {
+  showPaymentViewController(config = {}) {
+    var options = {
+      callToActionText: config.callToActionText,
+    };
     return new Promise(function(resolve, reject) {
-      Braintree.paymentRequest((nonce) => resolve(nonce), (error) => reject(error));
+      Braintree.paymentRequest(options.callToActionText, (nonce) => resolve(nonce), (error) => reject(error));
     });
   },
 };

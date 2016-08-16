@@ -82,12 +82,19 @@ public class Braintree extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void paymentRequest(final Callback successCallback, final Callback errorCallback) {
+  public void paymentRequest(final String callToActionText, final Callback successCallback, final Callback errorCallback) {
     this.successCallback = successCallback;
     this.errorCallback = errorCallback;
+    PaymentRequest paymentRequest = null;
 
-    PaymentRequest paymentRequest = new PaymentRequest()
-    .clientToken(this.getToken());
+    if (callToActionText != null) {
+      paymentRequest = new PaymentRequest()
+        .submitButtonText(callToActionText)
+        .clientToken(this.getToken());
+    } else {
+      paymentRequest = new PaymentRequest()
+        .clientToken(this.getToken());
+    }
 
     ((Activity)this.mActivityContext).startActivityForResult(
       paymentRequest.getIntent(this.mActivityContext),
