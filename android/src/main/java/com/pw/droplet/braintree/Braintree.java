@@ -125,4 +125,6 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
       }
     }
   }
+
+  public void onNewIntent(Intent intent){}
 }
