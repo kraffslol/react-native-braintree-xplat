@@ -13,6 +13,10 @@ import java.util.List;
 public class BraintreePackage implements ReactPackage {
   private Braintree mModuleInstance;
 
+  public BraintreePackage() {
+    
+  }
+
   @Override
   public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
     List<NativeModule> modules = new ArrayList<>();
