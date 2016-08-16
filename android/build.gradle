@@ -20,7 +20,7 @@ android {
 
 dependencies {
     compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.facebook.react:react-native:0.15.+"
+    compile "com.facebook.react:react-native:+"
     compile 'com.braintreepayments.api:braintree:2.+'
     compile 'com.braintreepayments.api:drop-in:2.+'
 }

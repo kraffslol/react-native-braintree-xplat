@@ -18,6 +18,61 @@ or do it manually as described below:
 
 ## Android Installation
 Run `npm install react-native-braintree-xplat --save`
+### RN 0.29 and over
+
+In `android/settings.gradle`
+```gradle
+...
+
+include ':react-native-braintree-xplat'
+project(':react-native-braintree-xplat').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-braintree-xplat/android')
+```
+
+In `android/app/build.gradle`
+
+```gradle
+...
+
+dependencies {
+    ...
+
+    compile project(':react-native-braintree-xplat')
+}
+```
+
+Register module (in `MainApplication.java`)
+
+```java
+import com.pw.droplet.braintree.BraintreePackage; // <--- Import Package
+import android.content.Intent; // <--- Import Intent
+
+public class MainApplication extends Application implements ReactApplication {
+
+  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+    @Override
+    protected boolean getUseDeveloperSupport() {
+      return BuildConfig.DEBUG;
+    }
+
+    @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),
+          new BraintreePackage() // <--- Initialize the package
+      );
+    }
+  };
+
+  @Override
+  public ReactNativeHost getReactNativeHost() {
+      return mReactNativeHost;
+  }
+}
+
+```
+---
+### RN 0.28 and under
+
 
 In `android/settings.gradle`
 ```gradle
@@ -46,7 +101,6 @@ import com.pw.droplet.braintree.BraintreePackage; // <--- Import Package
 import android.content.Intent; // <--- Import Intent
 
 public class MainActivity extends ReactActivity {
-    private BraintreePackage mBraintreePackage; // <-- Add Package Variable
     /**
      * Returns the name of the main component registered from JavaScript.
      * This is used to schedule rendering of the component.
@@ -73,16 +127,8 @@ public class MainActivity extends ReactActivity {
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
-            mBraintreePackage = new BraintreePackage(this) // <---  Initialize the Package
+            new BraintreePackage() // <---  Initialize the Package
         );
-    }
-
-    // Add onActivityResult
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        mBraintreePackage.handleActivityResult(requestCode, resultCode, data);
     }
 }
 

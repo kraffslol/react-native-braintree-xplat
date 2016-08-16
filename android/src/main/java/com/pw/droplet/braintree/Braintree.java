@@ -17,8 +17,9 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ActivityEventListener;
 
-public class Braintree extends ReactContextBaseJavaModule {
+public class Braintree extends ReactContextBaseJavaModule implements ActivityEventListener {
   private static final int PAYMENT_REQUEST = 1;
   private String token;
 
@@ -29,9 +30,9 @@ public class Braintree extends ReactContextBaseJavaModule {
 
   private BraintreeFragment mBraintreeFragment;
 
-  public Braintree(ReactApplicationContext reactContext, Context activityContext) {
+  public Braintree(ReactApplicationContext reactContext) {
     super(reactContext);
-    this.mActivityContext = activityContext;
+    reactContext.addActivityEventListener(this);
   }
 
   @Override
@@ -50,7 +51,7 @@ public class Braintree extends ReactContextBaseJavaModule {
   @ReactMethod
   public void setup(final String token, final Callback successCallback, final Callback errorCallback) {
     try {
-      this.mBraintreeFragment = BraintreeFragment.newInstance((Activity)this.mActivityContext, token);
+      this.mBraintreeFragment = BraintreeFragment.newInstance(getCurrentActivity(), token);
       this.mBraintreeFragment.addListener(new PaymentMethodNonceCreatedListener() {
         @Override
         public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
@@ -96,13 +97,14 @@ public class Braintree extends ReactContextBaseJavaModule {
         .clientToken(this.getToken());
     }
 
-    ((Activity)this.mActivityContext).startActivityForResult(
-      paymentRequest.getIntent(this.mActivityContext),
+    (getCurrentActivity()).startActivityForResult(
+      paymentRequest.getIntent(getCurrentActivity()),
       PAYMENT_REQUEST
     );
   }
 
-  public void handleActivityResult(final int requestCode, final int resultCode, final Intent data) {
+  @Override
+  public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
     if (requestCode == PAYMENT_REQUEST) {
       switch (resultCode) {
         case Activity.RESULT_OK:
