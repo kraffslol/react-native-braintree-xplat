@@ -184,7 +184,7 @@ BTClient.showPayPalViewController().then(function(nonce) {
 ## Custom Integration
 If you only want to tokenize credit card information, you can use the following:
 ```js
-BTClient.getCardNonce("4111111111111111", "10", "20").then(function(nonce) {
+BTClient.getCardNonce("4111111111111111", "10", "20", "400").then(function(nonce) {
   //payment succeeded, pass nonce to server
 })
 .catch(function(err) {

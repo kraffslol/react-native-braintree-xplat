@@ -10,9 +10,9 @@ module.exports = {
     });
   },
 
-  getCardNonce(cardNumber, expirationMonth, expirationYear) {
+  getCardNonce(cardNumber, expirationMonth, expirationYear, cvv) {
     return new Promise(function(resolve, reject) {
-      Braintree.getCardNonce(cardNumber, expirationMonth, expirationYear, (nonce) => resolve(nonce), (err) => reject(err))
+      Braintree.getCardNonce(cardNumber, expirationMonth, expirationYear, cvv, (nonce) => resolve(nonce), (err) => reject(err))
     });
   },
 

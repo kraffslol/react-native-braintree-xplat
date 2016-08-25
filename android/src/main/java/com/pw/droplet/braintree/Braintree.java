@@ -66,14 +66,16 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
   }
 
   @ReactMethod
-  public void getCardNonce(final String cardNumber, final String expirationMonth, final String expirationYear, final Callback successCallback, final Callback errorCallback) {
+  public void getCardNonce(final String cardNumber, final String expirationMonth, final String expirationYear, final String cvv, final Callback successCallback, final Callback errorCallback) {
     this.successCallback = successCallback;
     this.errorCallback = errorCallback;
 
     CardBuilder cardBuilder = new CardBuilder()
       .cardNumber(cardNumber)
       .expirationMonth(expirationMonth)
-      .expirationYear(expirationYear);
+      .expirationYear(expirationYear)
+      .cvv(cvv)
+      .validate(true);
 
     Card.tokenize(this.mBraintreeFragment, cardBuilder);
   }
