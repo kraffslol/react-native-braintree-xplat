@@ -4,9 +4,9 @@
 An effort to merge react-native-braintree and react-native-braintree-android
 
 ## iOS Installation
-You can use [`rnpm`](https://github.com/rnpm/rnpm) to add native dependencies automatically:
+You can use the React Native CLI to add native dependencies automatically:
 
-`$ rnpm link`
+`$ react-native link`
 
 or do it manually as described below:
 
