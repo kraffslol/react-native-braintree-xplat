@@ -96,7 +96,7 @@ RCT_EXPORT_METHOD(showPayPalViewController:(RCTResponseSenderBlock)callback)
         [payPalDriver authorizeAccountWithCompletion:^(BTPayPalAccountNonce *tokenizedPayPalAccount, NSError *error) {
             NSArray *args = @[];
             if ( error == nil ) {
-                args = @[[NSNull null], tokenizedPayPalAccount.nonce];
+                args = @[[NSNull null], tokenizedPayPalAccount.nonce, tokenizedPayPalAccount.email, tokenizedPayPalAccount.firstName, tokenizedPayPalAccount.lastName, tokenizedPayPalAccount.phone];
             } else {
                 args = @[error.description, [NSNull null]];
             }
