@@ -106,7 +106,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
   }
 
   @Override
-  public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+  public void onActivityResult(Activity activity, final int requestCode, final int resultCode, final Intent data) {
     if (requestCode == PAYMENT_REQUEST) {
       switch (resultCode) {
         case Activity.RESULT_OK:
