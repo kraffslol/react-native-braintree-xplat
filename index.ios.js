@@ -50,7 +50,7 @@ var Braintree = {
   			nonce != null ? resolve(nonce) : reject(err);
   		});
   	});
-  }
+  },
 
 	getDeviceData(options = {}) {
 		return new Promise(function(resolve, reject) {
