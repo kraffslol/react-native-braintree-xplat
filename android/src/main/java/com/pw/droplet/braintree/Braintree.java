@@ -20,7 +20,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ActivityEventListener;
 
 public class Braintree extends ReactContextBaseJavaModule implements ActivityEventListener {
-  private static final int PAYMENT_REQUEST = 1;
+  private static final int PAYMENT_REQUEST = 1706816330;
   private String token;
 
   private Callback successCallback;
