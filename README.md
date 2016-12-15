@@ -171,7 +171,7 @@ const options = {
 
 ___
 
-PayPal only (iOS only)
+PayPal only
 ```js
 BTClient.showPayPalViewController().then(function(nonce) {
   //payment succeeded, pass nonce to server

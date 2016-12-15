@@ -11,6 +11,7 @@ import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.exceptions.InvalidArgumentException;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.Card;
+import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 
 import com.facebook.react.bridge.Callback;
@@ -103,6 +104,15 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
       paymentRequest.getIntent(getCurrentActivity()),
       PAYMENT_REQUEST
     );
+  }
+
+  @ReactMethod
+  public void paypalRequest(final Callback successCallback, final Callback errorCallback) {
+    this.successCallback = successCallback;
+    this.errorCallback = errorCallback;
+
+    PayPal payPal = new PayPal();
+    payPal.authorizeAccount(this.mBraintreeFragment);
   }
 
   @Override
