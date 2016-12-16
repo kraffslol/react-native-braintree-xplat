@@ -75,7 +75,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
       .expirationMonth(expirationMonth)
       .expirationYear(expirationYear)
       .cvv(cvv)
-      .validate(true);
+      .validate(false);
 
     Card.tokenize(this.mBraintreeFragment, cardBuilder);
   }
