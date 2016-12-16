@@ -24,4 +24,10 @@ module.exports = {
       Braintree.paymentRequest(options.callToActionText, (nonce) => resolve(nonce), (error) => reject(error));
     });
   },
+
+  showPayPalViewController() {
+    return new Promise(function(resolve, reject) {
+      Braintree.paypalRequest((nonce) => resolve(nonce), (error) => reject(error));
+    });
+  },
 };
