@@ -192,28 +192,31 @@ BTClient.getCardNonce("4111111111111111", "10", "20", "400").then(function(nonce
 });
 ```
 
-### One Touch on iOS
+## One Touch on iOS
 To take advantage of [One Touch](https://developers.braintreepayments.com/guides/one-touch/overview/ios/v3), there are additional setup required:
 
 1. Register a URL scheme in Xcode (should always start with YOUR Bundle ID)
+[More info here](https://developers.braintreepayments.com/guides/paypal/client-side/ios/v3#register-a-url-type) TL;DR
 
-####add to Info.Plist
+
+#### Add CFBundleURLTypes to Info.Plist
 ```js
 	<key>CFBundleURLTypes</key>
 	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>your.bundle.id</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>your.bundle.id.payments</string>
-			</array>
-		</dict>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLName</key>
+		<string>your.bundle.id</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>your.bundle.id.payments</string>
+		</array>
+	</dict>
 	</array>
 ```
 #### WhiteList
+If your app is built using iOS 9 as its Base SDK, then you must add URLs to a whitelist in your app's info.plist
 ```js
    <key>LSApplicationQueriesSchemes</key>
    <array>
