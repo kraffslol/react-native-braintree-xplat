@@ -192,6 +192,64 @@ BTClient.getCardNonce("4111111111111111", "10", "20", "400").then(function(nonce
 });
 ```
 
+## One Touch on iOS
+To take advantage of [One Touch](https://developers.braintreepayments.com/guides/one-touch/overview/ios/v3), there are additional setup required:
+
+1. Register a URL scheme in Xcode (should always start with YOUR Bundle ID)
+[More info here](https://developers.braintreepayments.com/guides/paypal/client-side/ios/v3#register-a-url-type) TL;DR
+
+
+#### Add CFBundleURLTypes to Info.Plist
+```js
+	<key>CFBundleURLTypes</key>
+	<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLName</key>
+		<string>your.bundle.id</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>your.bundle.id.payments</string>
+		</array>
+	</dict>
+	</array>
+```
+#### WhiteList
+If your app is built using iOS 9 as its Base SDK, then you must add URLs to a whitelist in your app's info.plist
+```js
+   <key>LSApplicationQueriesSchemes</key>
+   <array>
+     <string>com.paypal.ppclient.touch.v1</string>
+     <string>com.paypal.ppclient.touch.v2</string>
+     <string>com.venmo.touch.v2</string>
+   </array>
+```
+
+2. For iOS: Use setupWithURLScheme instead, passing the url scheme you have registered in previous step
+  ```js
+  var BTClient = require('react-native-braintree');
+  BTClient.setupWithURLScheme(token, 'your.bundle.id.payments');
+  ```
+  #### For xplat, you can do something like this:
+  
+  ```js
+  
+   if (Platform.OS === 'ios') {
+        BTClient.setupWithURLScheme(token, 'your.bundle.id.payments');
+    } else {
+        BTClient.setup(token);
+    }  
+  ```
+
+3. Add this delegate method (callback) to your AppDelegate.m
+  ```objc
+#import "RCTBraintree.h"
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+  return [[RCTBraintree sharedInstance] application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+}
+  ```
 ## Credits
 
 Big thanks to [@alanhhwong](https://github.com/alanhhwong) and [@surialabs](https://github.com/surialabs) for the original ios & android modules.
