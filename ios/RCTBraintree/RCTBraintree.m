@@ -89,8 +89,7 @@ RCT_EXPORT_METHOD(showPaymentViewController:(NSDictionary *)options callback:(RC
 
             dropInViewController.paymentRequest = paymentRequest;
         }
-
-        self.reactRoot = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+        
         [self.reactRoot presentViewController:navigationController animated:YES completion:nil];
     });
 }
@@ -197,12 +196,10 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
 #pragma mark - BTViewControllerPresentingDelegate
 
 - (void)paymentDriver:(id)paymentDriver requestsPresentationOfViewController:(UIViewController *)viewController {
-    self.reactRoot = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
     [self.reactRoot presentViewController:viewController animated:YES completion:nil];
 }
 
 - (void)paymentDriver:(id)paymentDriver requestsDismissalOfViewController:(UIViewController *)viewController {
-    self.reactRoot = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
     [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -222,6 +219,19 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
 - (void)dropInViewControllerDidCancel:(__unused BTDropInViewController *)viewController {
     [viewController dismissViewControllerAnimated:YES completion:nil];
     self.callback(@[@"Drop-In ViewController Closed", [NSNull null]]);
+}
+
+- (UIViewController*)reactRoot {
+    UIViewController *root  = [UIApplication sharedApplication].keyWindow.rootViewController;
+    UIViewController *maybeModal = root.presentedViewController;
+    
+    UIViewController *modalRoot = root;
+    
+    if (maybeModal != nil) {
+        modalRoot = maybeModal;
+    }
+
+    return modalRoot;
 }
 
 @end
