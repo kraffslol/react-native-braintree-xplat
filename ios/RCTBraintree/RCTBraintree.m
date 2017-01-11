@@ -103,12 +103,13 @@ RCT_EXPORT_METHOD(showPayPalViewController:(RCTResponseSenderBlock)callback)
         payPalDriver.viewControllerPresentingDelegate = self;
 
         [payPalDriver authorizeAccountWithCompletion:^(BTPayPalAccountNonce *tokenizedPayPalAccount, NSError *error) {
-            NSArray *args = @[];
-            if ( error == nil ) {
-                args = @[[NSNull null], tokenizedPayPalAccount.nonce, tokenizedPayPalAccount.email, tokenizedPayPalAccount.firstName, tokenizedPayPalAccount.lastName, tokenizedPayPalAccount.phone];
-            } else {
+            NSArray *args = @[[NSNull null]];
+            if ( error == nil && tokenizedPayPalAccount != nil ) {
+                args = @[[NSNull null], tokenizedPayPalAccount.nonce, tokenizedPayPalAccount.email, tokenizedPayPalAccount.firstName, tokenizedPayPalAccount.lastName, tokenizedPayPalAccount.phone];   
+            } else if ( error != nil ) {
                 args = @[error.description, [NSNull null]];
             }
+
             callback(args);
         }];
     });
