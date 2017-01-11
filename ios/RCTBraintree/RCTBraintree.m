@@ -200,7 +200,9 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
 }
 
 - (void)paymentDriver:(id)paymentDriver requestsDismissalOfViewController:(UIViewController *)viewController {
-    [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
+    if (!viewController.isBeingDismissed) {
+        [viewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 #pragma mark - BTDropInViewControllerDelegate
@@ -213,12 +215,12 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
 - (void)dropInViewController:(BTDropInViewController *)viewController didSucceedWithTokenization:(BTPaymentMethodNonce *)paymentMethodNonce {
 
     self.callback(@[[NSNull null],paymentMethodNonce.nonce]);
-    [viewController dismissViewControllerAnimated:YES completion:nil];
+    [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)dropInViewControllerDidCancel:(__unused BTDropInViewController *)viewController {
-    [viewController dismissViewControllerAnimated:YES completion:nil];
     self.callback(@[@"Drop-In ViewController Closed", [NSNull null]]);
+    [viewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (UIViewController*)reactRoot {
