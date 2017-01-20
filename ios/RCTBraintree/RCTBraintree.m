@@ -10,7 +10,9 @@
 #import "RCTUtils.h"
 #import "RCTConvert.h"
 
-@implementation RCTBraintree
+@implementation RCTBraintree {
+    bool runCallback;
+}
 
 static NSString *URLScheme;
 
@@ -213,9 +215,15 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
     self.callback(@[@"User cancelled payment", [NSNull null]]);
 }
 
-- (void)dropInViewController:(BTDropInViewController *)viewController didSucceedWithTokenization:(BTPaymentMethodNonce *)paymentMethodNonce {
+- (void)dropInViewControllerWillComplete:(BTDropInViewController *)viewController {
+    runCallback = TRUE;
+}
 
-    self.callback(@[[NSNull null],paymentMethodNonce.nonce]);
+- (void)dropInViewController:(BTDropInViewController *)viewController didSucceedWithTokenization:(BTPaymentMethodNonce *)paymentMethodNonce {
+    if (runCallback) {
+        runCallback = FALSE;
+        self.callback(@[[NSNull null],paymentMethodNonce.nonce]);
+    }
     [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
 }
 
