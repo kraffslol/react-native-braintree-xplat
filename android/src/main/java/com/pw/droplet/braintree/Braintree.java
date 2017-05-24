@@ -1,5 +1,10 @@
 package com.pw.droplet.braintree;
 
+import java.util.Map;
+import java.util.HashMap;
+
+import com.google.gson.Gson;
+
 import android.content.Intent;
 import android.content.Context;
 import android.app.Activity;
@@ -9,10 +14,13 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.BraintreePaymentActivity;
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.exceptions.InvalidArgumentException;
+import com.braintreepayments.api.exceptions.BraintreeError;
+import com.braintreepayments.api.exceptions.ErrorWithResponse;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.Card;
 import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
+import com.braintreepayments.api.interfaces.BraintreeErrorListener;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -59,6 +67,41 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
           nonceCallback(paymentMethodNonce.getNonce());
         }
       });
+      this.mBraintreeFragment.addListener(new BraintreeErrorListener() {
+        @Override
+        public void onError(Exception error) {
+          if (error instanceof ErrorWithResponse) {
+            ErrorWithResponse errorWithResponse = (ErrorWithResponse) error;
+            BraintreeError cardErrors = errorWithResponse.errorFor("creditCard");
+            if (cardErrors != null) {
+              Gson gson = new Gson();
+              final Map<String, String> errors = new HashMap<>();
+              BraintreeError numberError = cardErrors.errorFor("number");
+              BraintreeError cvvError = cardErrors.errorFor("cvv");
+              BraintreeError expirationDateError = cardErrors.errorFor("expirationDate");
+              BraintreeError expirationYearError = cardErrors.errorFor("expirationYear");
+
+              if (numberError != null) {
+                errors.put("card_number", numberError.getMessage());
+              }
+
+              if (cvvError != null) {
+                errors.put("cvv", cvvError.getMessage());
+              }
+
+              if (expirationDateError != null) {
+                errors.put("expiration_date", expirationDateError.getMessage());
+              }
+
+              if (expirationYearError != null) {
+                errors.put("expiration_year", expirationYearError.getMessage());
+              }
+
+              nonceErrorCallback(gson.toJson(errors));
+            }
+          }
+        }
+      });
       this.setToken(token);
       successCallback.invoke(this.getToken());
     } catch (InvalidArgumentException e) {
@@ -76,13 +119,17 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
       .expirationMonth(expirationMonth)
       .expirationYear(expirationYear)
       .cvv(cvv)
-      .validate(false);
+      .validate(true);
 
     Card.tokenize(this.mBraintreeFragment, cardBuilder);
   }
 
   public void nonceCallback(String nonce) {
     this.successCallback.invoke(nonce);
+  }
+
+  public void nonceErrorCallback(String error) {
+    this.errorCallback.invoke(error);
   }
 
   @ReactMethod
