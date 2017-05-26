@@ -19,6 +19,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ActivityEventListener;
+import com.facebook.react.bridge.ReadableMap;
 
 public class Braintree extends ReactContextBaseJavaModule implements ActivityEventListener {
   private static final int PAYMENT_REQUEST = 1706816330;
@@ -86,19 +87,38 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
   }
 
   @ReactMethod
-  public void paymentRequest(final String callToActionText, final Callback successCallback, final Callback errorCallback) {
+  public void paymentRequest(final ReadableMap options, final Callback successCallback, final Callback errorCallback) {
     this.successCallback = successCallback;
     this.errorCallback = errorCallback;
     PaymentRequest paymentRequest = null;
 
-    if (callToActionText != null) {
-      paymentRequest = new PaymentRequest()
-        .submitButtonText(callToActionText)
-        .clientToken(this.getToken());
-    } else {
-      paymentRequest = new PaymentRequest()
-        .clientToken(this.getToken());
+    String callToActionText = null;
+    String title = null;
+    String description = null;
+    String amount = null;
+
+    if (options.hasKey("callToActionText")) {
+      callToActionText = options.getString("callToActionText");
     }
+
+    if (options.hasKey("title")) {
+      title = options.getString("title");
+    }
+
+    if (options.hasKey("description")) {
+      description = options.getString("description");
+    }
+
+    if (options.hasKey("amount")) {
+      amount = options.getString("amount");
+    }
+
+    paymentRequest = new PaymentRequest()
+      .submitButtonText(callToActionText)
+      .primaryDescription(title)
+      .secondaryDescription(description)
+      .amount(amount)
+      .clientToken(this.getToken());
 
     (getCurrentActivity()).startActivityForResult(
       paymentRequest.getIntent(getCurrentActivity()),

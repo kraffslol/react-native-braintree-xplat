@@ -73,8 +73,15 @@ RCT_EXPORT_METHOD(showPaymentViewController:(NSDictionary *)options callback:(RC
         UIColor *barBgColor = options[@"barBgColor"];
         UIColor *barTintColor = options[@"barTintColor"];
 
+        NSString *title = options[@"title"];
+        NSString *description = options[@"description"];
+        NSString *amount = options[@"amount"];
+
         if (tintColor) dropInViewController.view.tintColor = [RCTConvert UIColor:tintColor];
         if (bgColor) dropInViewController.view.backgroundColor = [RCTConvert UIColor:bgColor];
+        if (title) [dropInViewController.paymentRequest setTitle:title];
+        if (description) [dropInViewController.paymentRequest setDescription:description];
+        if (amount) [dropInViewController.paymentRequest setAmount:amount];
 
         dropInViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(userDidCancelPayment)];
 
@@ -91,7 +98,7 @@ RCT_EXPORT_METHOD(showPaymentViewController:(NSDictionary *)options callback:(RC
 
             dropInViewController.paymentRequest = paymentRequest;
         }
-        
+
         [self.reactRoot presentViewController:navigationController animated:YES completion:nil];
     });
 }
@@ -147,14 +154,14 @@ RCT_EXPORT_METHOD(getCardNonce: (NSString *)cardNumber
 RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSenderBlock)callback)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        
+
         NSLog(@"%@", options);
-        
+
         NSError *error = nil;
         NSString *deviceData = nil;
         NSString *environment = options[@"environment"];
         NSString *dataSelector = options[@"dataCollector"];
-        
+
         //Initialize the data collector and specify environment
         if([environment isEqualToString: @"development"]){
             self.dataCollector = [[BTDataCollector alloc]
@@ -166,7 +173,7 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
             self.dataCollector = [[BTDataCollector alloc]
                                   initWithEnvironment:BTDataCollectorEnvironmentSandbox];
         }
-        
+
         //Data collection methods
         if ([dataSelector isEqualToString: @"card"]){
             deviceData = [self.dataCollector collectCardFraudData];
@@ -180,14 +187,14 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
             error = [NSError errorWithDomain:@"RCTBraintree" code:255 userInfo:details];
             NSLog (@"Invalid data collector. Use one of: card, paypal or both");
         }
-        
+
         NSArray *args = @[];
         if ( error == nil ) {
             args = @[[NSNull null], deviceData];
         } else {
             args = @[error.description, [NSNull null]];
         }
-        
+
         callback(args);
     });
 }
@@ -240,9 +247,9 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
 - (UIViewController*)reactRoot {
     UIViewController *root  = [UIApplication sharedApplication].keyWindow.rootViewController;
     UIViewController *maybeModal = root.presentedViewController;
-    
+
     UIViewController *modalRoot = root;
-    
+
     if (maybeModal != nil) {
         modalRoot = maybeModal;
     }
