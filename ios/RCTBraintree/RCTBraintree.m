@@ -79,9 +79,6 @@ RCT_EXPORT_METHOD(showPaymentViewController:(NSDictionary *)options callback:(RC
 
         if (tintColor) dropInViewController.view.tintColor = [RCTConvert UIColor:tintColor];
         if (bgColor) dropInViewController.view.backgroundColor = [RCTConvert UIColor:bgColor];
-        if (title) [dropInViewController.paymentRequest setTitle:title];
-        if (description) [dropInViewController.paymentRequest setDescription:description];
-        if (amount) [dropInViewController.paymentRequest setAmount:amount];
 
         dropInViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(userDidCancelPayment)];
 
@@ -98,6 +95,10 @@ RCT_EXPORT_METHOD(showPaymentViewController:(NSDictionary *)options callback:(RC
 
             dropInViewController.paymentRequest = paymentRequest;
         }
+
+        if (title) [dropInViewController.paymentRequest setSummaryTitle:title];
+        if (description) [dropInViewController.paymentRequest setSummaryDescription:description];
+        if (amount) [dropInViewController.paymentRequest setDisplayAmount:amount];
 
         [self.reactRoot presentViewController:navigationController animated:YES completion:nil];
     });
