@@ -23,4 +23,5 @@ dependencies {
     compile "com.facebook.react:react-native:+"
     compile 'com.braintreepayments.api:braintree:2.+'
     compile 'com.braintreepayments.api:drop-in:2.+'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
 }
