@@ -7,6 +7,9 @@
 //
 
 #import <React/RCTBridgeModule.h>
+#import <React/RCTUtils.h>
+#import <React/RCTConvert.h>
+
 #import "BraintreeCore.h"
 #import "BraintreePayPal.h"
 #import "BraintreeCard.h"
