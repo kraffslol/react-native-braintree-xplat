@@ -3,6 +3,7 @@ package com.pw.droplet.braintree;
 import java.util.Map;
 import java.util.HashMap;
 
+import com.braintreepayments.api.interfaces.BraintreeCancelListener;
 import com.google.gson.Gson;
 
 import android.content.Intent;
@@ -62,6 +63,12 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
   public void setup(final String token, final Callback successCallback, final Callback errorCallback) {
     try {
       this.mBraintreeFragment = BraintreeFragment.newInstance(getCurrentActivity(), token);
+      this.mBraintreeFragment.addListener(new BraintreeCancelListener() {
+        @Override
+        public void onCancel(int requestCode) {
+          nonceErrorCallback("Canceled");
+        }
+      });
       this.mBraintreeFragment.addListener(new PaymentMethodNonceCreatedListener() {
         @Override
         public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
@@ -99,6 +106,8 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
               }
 
               nonceErrorCallback(gson.toJson(errors));
+            } else {
+              nonceErrorCallback(errorWithResponse.getErrorResponse());
             }
           }
         }
@@ -177,9 +186,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
   public void paypalRequest(final Callback successCallback, final Callback errorCallback) {
     this.successCallback = successCallback;
     this.errorCallback = errorCallback;
-
-    PayPal payPal = new PayPal();
-    payPal.authorizeAccount(this.mBraintreeFragment);
+    PayPal.authorizeAccount(this.mBraintreeFragment);
   }
 
   @Override
