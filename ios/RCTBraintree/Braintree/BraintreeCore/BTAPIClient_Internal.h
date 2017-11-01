@@ -16,18 +16,31 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) BTHTTP *http;
 @property (nonatomic, strong) BTHTTP *configurationHTTP;
 
-/// Client metadata that is used for tracking the client session
+/*!
+ @brief Client metadata that is used for tracking the client session
+*/
 @property (nonatomic, readonly, strong) BTClientMetadata *metadata;
 
-/// Exposed for testing analytics
+/*!
+ @brief Exposed for testing analytics
+*/
 @property (nonatomic, strong) BTAnalyticsService *analyticsService;
 
-/// Analytics should only be posted by internal clients.
+/*!
+ @brief Sends this event and all queued analytics events. Use `queueAnalyticsEvent` for low priority events.
+*/
 - (void)sendAnalyticsEvent:(NSString *)eventName;
 
-/// An internal initializer to toggle whether to send an analytics event during initialization.
-/// This prevents copyWithSource:integration: from sending a duplicate event. It can also be used
-/// to suppress excessive network chatter during testing.
+/*!
+ @brief Queues an analytics event to be sent.
+ */
+- (void)queueAnalyticsEvent:(NSString *)eventName;
+
+/*!
+ @brief An internal initializer to toggle whether to send an analytics event during initialization.
+ @discussion This prevents copyWithSource:integration: from sending a duplicate event. It can also be used to suppress excessive network chatter during testing.
+*/
+
 - (nullable instancetype)initWithAuthorization:(NSString *)authorization sendAnalyticsEvent:(BOOL)sendAnalyticsEvent;
 
 @end

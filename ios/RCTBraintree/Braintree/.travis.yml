@@ -1,27 +1,27 @@
+sudo: true
 language: objective-c
-osx_image: xcode7.3
-
-install:
-  - bundle install
-  - pod install
-
 cache:
   - bundler
-  - cocoapods
+  #- cocoapods
+osx_image: xcode9.0
 
 before_install:
   - brew update || brew update
   - brew outdated xctool || brew upgrade xctool
-  - SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (9.3) \[.*\]" | grep -o "\[.*\]" | sed "s/^\[\(.*\)\]$/\1/")
+  - SIMULATOR_ID=$(xcrun instruments -s | grep -o "iPhone 6 (10.1) \[.*\]" | grep -o "\[.*\]" | sed "s/^\[\(.*\)\]$/\1/")
+
+install:
+  - bundle install
+  #- bundle exec pod repo update --silent
+  - bundle exec pod install || { rm -rf ./Pods; bundle exec pod install; }
 
 script:
   - echo $SIMULATOR_ID
-  # Launching the simulator before building and testing is necessary to prevent spurious timeouts.
-  # Specifying the simulator UDID is also necessary.
   - open -a "simulator" --args -CurrentDeviceUDID $SIMULATOR_ID
-  - rake spec:unit
-  - rake spec:api:integration
-
+  - travis_wait 30 set -o pipefail && xcodebuild test -workspace Braintree.xcworkspace -scheme "UnitTests" -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.1' | xcpretty -c
+  - travis_wait set -o pipefail && xcodebuild test -workspace Braintree.xcworkspace -scheme "IntegrationTests" -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6,OS=10.1' | xcpretty -c
+  #- travis_wait bundle exec rake spec:unit
+  #- bundle exec rake spec:api:integration
 notifications:
   email:
     - team-ios@getbraintree.com

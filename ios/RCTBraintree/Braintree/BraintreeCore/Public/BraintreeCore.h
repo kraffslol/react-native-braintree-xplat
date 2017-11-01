@@ -8,9 +8,11 @@ FOUNDATION_EXPORT const unsigned char BraintreeCoreVersionString[];
 
 #import "BTAPIClient.h"
 #import "BTAppSwitch.h"
+#import "BTBinData.h"
 #import "BTClientMetadata.h"
 #import "BTClientToken.h"
 #import "BTConfiguration.h"
+#import "BTEnums.h"
 #import "BTErrors.h"
 #import "BTHTTPErrors.h"
 #import "BTJSON.h"
@@ -21,3 +23,7 @@ FOUNDATION_EXPORT const unsigned char BraintreeCoreVersionString[];
 #import "BTTokenizationService.h"
 #import "BTPaymentMethodNonce.h"
 #import "BTViewControllerPresentingDelegate.h"
+
+#ifndef __BT_AVAILABLE
+#define __BT_AVAILABLE(class) NSClassFromString(class) != nil
+#endif /*__BT_AVAILABLE*/

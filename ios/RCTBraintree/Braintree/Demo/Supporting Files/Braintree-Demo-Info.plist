@@ -41,7 +41,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>4.3.2</string>
+	<string>4.9.4</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -56,13 +56,11 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>4.3.2</string>
+	<string>4.9.4</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>com.braintreepayments.Demo.payments</string>
 		<string>com.venmo.touch.v2</string>
-		<string>com.paypal.ppclient.touch.v1</string>
-		<string>com.paypal.ppclient.touch.v2</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -75,14 +73,12 @@
 	<string></string>
 	<key>UILaunchStoryboardName</key>
 	<string>Launch Screen</string>
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
-	<key>UIMainStoryboardFile~ipad</key>
-	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIRequiresFullScreen</key>
+	<false/>
 	<key>UIStatusBarHidden</key>
 	<false/>
 	<key>UIStatusBarStyle</key>

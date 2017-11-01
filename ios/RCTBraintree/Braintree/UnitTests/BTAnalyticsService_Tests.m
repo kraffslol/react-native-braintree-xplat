@@ -1,8 +1,8 @@
+#import "UnitTests-Swift.h"
 #import "BTAnalyticsService.h"
 #import "BTKeychain.h"
 #import "Braintree-Version.h"
 #import "BTFakeHTTP.h"
-#import "UnitTests-Swift.h"
 #import <XCTest/XCTest.h>
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
@@ -103,6 +103,9 @@
     
     [analyticsService sendAnalyticsEvent:@"an.analytics.event"];
     [analyticsService sendAnalyticsEvent:@"another.analytics.event"];
+    // Pause briefly to allow analytics service to dispatch async blocks
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+    
     XCTestExpectation *expectation = [self expectationWithDescription:@"Sends batched request"];
     [analyticsService flush:^(NSError *error) {
         XCTAssertNil(error);
@@ -199,6 +202,8 @@
     
     [analyticsService sendAnalyticsEvent:@"an.analytics.event"];
     [analyticsService sendAnalyticsEvent:@"another.analytics.event"];
+    // Pause briefly to allow analytics service to dispatch async blocks
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIApplicationWillResignActiveNotification object:nil];
 
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
@@ -223,24 +228,25 @@
 }
 
 - (void)validateMetaParameters:(NSDictionary *)metaParameters {
+    NSString *unitTestDeploymentTargetVersion = [@(__IPHONE_OS_VERSION_MIN_REQUIRED) stringValue];
+    NSString *unitTestBaseSDKVersion = [@(__IPHONE_OS_VERSION_MAX_ALLOWED) stringValue];
+
     XCTAssertEqualObjects(metaParameters[@"deviceManufacturer"], @"Apple");
     XCTAssertEqualObjects(metaParameters[@"deviceModel"], [self deviceModel]);
     XCTAssertEqualObjects(metaParameters[@"deviceAppGeneratedPersistentUuid"], [self deviceAppGeneratedPersistentUuid]);
     XCTAssertEqualObjects(metaParameters[@"deviceScreenOrientation"], @"Portrait");
     XCTAssertEqualObjects(metaParameters[@"integration"], @"custom");
-    XCTAssertEqualObjects(metaParameters[@"iosBaseSDK"], [@(__IPHONE_OS_VERSION_MAX_ALLOWED) stringValue]);
-    XCTAssertEqualObjects(metaParameters[@"iosDeploymentTarget"], [@(__IPHONE_OS_VERSION_MIN_REQUIRED) stringValue]);
+    XCTAssertEqualObjects(metaParameters[@"iosBaseSDK"], unitTestBaseSDKVersion);
+    XCTAssertEqualObjects(metaParameters[@"iosDeploymentTarget"], unitTestDeploymentTargetVersion);
     XCTAssertEqualObjects(metaParameters[@"iosDeviceName"], [[UIDevice currentDevice] name]);
     XCTAssertTrue((BOOL)metaParameters[@"isSimulator"] == TARGET_IPHONE_SIMULATOR);
     XCTAssertEqualObjects(metaParameters[@"merchantAppId"], @"com.braintreepayments.Demo");
     XCTAssertEqualObjects(metaParameters[@"merchantAppName"], @"Braintree iOS SDK Demo");
-    XCTAssertEqualObjects(metaParameters[@"merchantAppVersion"], BRAINTREE_VERSION);
     XCTAssertEqualObjects(metaParameters[@"sdkVersion"], BRAINTREE_VERSION);
     XCTAssertEqualObjects(metaParameters[@"platform"], @"iOS");
     XCTAssertEqualObjects(metaParameters[@"platformVersion"], [[UIDevice currentDevice] systemVersion]);
     XCTAssertNotNil(metaParameters[@"sessionId"]);
     XCTAssertEqualObjects(metaParameters[@"source"], @"unknown");
-    XCTAssertTrue([metaParameters[@"paypalInstalled"] isKindOfClass:[NSNumber class]]);
     XCTAssertTrue([metaParameters[@"venmoInstalled"] isKindOfClass:[NSNumber class]]);
 }
 

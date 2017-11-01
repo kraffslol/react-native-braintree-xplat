@@ -24,6 +24,25 @@
     [self waitForExpectationsWithTimeout:5 handler:nil];
 }
 
+- (void)testTokenizeCard_whenCardIsInvalidAndValidationIsEnabled_failsWithExpectedValidationError {
+    BTAPIClient *apiClient = [[BTAPIClient alloc] initWithAuthorization:SANDBOX_CLIENT_TOKEN];
+    BTCardClient *client = [[BTCardClient alloc] initWithAPIClient:apiClient];
+    BTCard *card = [[BTCard alloc] initWithNumber:@"123" expirationMonth:@"12" expirationYear:@"2020" cvv:nil];
+    card.shouldValidate = YES;
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Tokenize card"];
+    [client tokenizeCard:card completion:^(BTCardNonce * _Nullable tokenizedCard, NSError * _Nullable error) {
+        XCTAssertNil(tokenizedCard);
+        XCTAssertEqualObjects(error.domain, BTCardClientErrorDomain);
+        XCTAssertEqual(error.code, BTCardClientErrorTypeCustomerInputInvalid);
+        XCTAssertEqualObjects(error.localizedDescription, @"Credit card is invalid");
+        XCTAssertEqualObjects(error.localizedFailureReason, @"Credit card number must be 12-19 digits");
+        [expectation fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+}
+
 - (void)testTokenizeCard_whenCardHasValidationDisabledAndCardIsValid_tokenizesSuccessfully {
     BTAPIClient *apiClient = [[BTAPIClient alloc] initWithAuthorization:SANDBOX_TOKENIZATION_KEY];
     BTCardClient *client = [[BTCardClient alloc] initWithAPIClient:apiClient];
@@ -32,6 +51,15 @@
     XCTestExpectation *expectation = [self expectationWithDescription:@"Tokenize card"];
     [client tokenizeCard:card completion:^(BTCardNonce * _Nullable tokenizedCard, NSError * _Nullable error) {
         expect(tokenizedCard.nonce.isANonce).to.beTruthy();
+        expect(tokenizedCard.binData.prepaid).toNot.beNil();
+        expect(tokenizedCard.binData.healthcare).toNot.beNil();
+        expect(tokenizedCard.binData.debit).toNot.beNil();
+        expect(tokenizedCard.binData.durbinRegulated).toNot.beNil();
+        expect(tokenizedCard.binData.commercial).toNot.beNil();
+        expect(tokenizedCard.binData.payroll).toNot.beNil();
+        expect(tokenizedCard.binData.issuingBank).toNot.beNil();
+        expect(tokenizedCard.binData.countryOfIssuance).toNot.beNil();
+        expect(tokenizedCard.binData.productId).toNot.beNil();
         expect(error).to.beNil();
         [expectation fulfill];
     }];
@@ -61,6 +89,22 @@
 
 - (void)testTokenizeCard_whenUsingClientTokenAndCardHasValidationEnabledAndCardIsValid_tokenizesSuccessfully {
     BTAPIClient *apiClient = [[BTAPIClient alloc] initWithAuthorization:SANDBOX_CLIENT_TOKEN];
+    BTCardClient *client = [[BTCardClient alloc] initWithAPIClient:apiClient];
+    BTCard *card = [self validCard];
+    card.shouldValidate = YES;
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Tokenize card"];
+    [client tokenizeCard:card completion:^(BTCardNonce * _Nullable tokenizedCard, NSError * _Nullable error) {
+        expect(tokenizedCard.nonce.isANonce).to.beTruthy();
+        expect(error).to.beNil();
+        [expectation fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+}
+
+- (void)testTokenizeCard_whenUsingVersionThreeClientTokenAndCardHasValidationEnabledAndCardIsValid_tokenizesSuccessfully {
+    BTAPIClient *apiClient = [[BTAPIClient alloc] initWithAuthorization:SANDBOX_CLIENT_TOKEN_VERSION_3];
     BTCardClient *client = [[BTCardClient alloc] initWithAPIClient:apiClient];
     BTCard *card = [self validCard];
     card.shouldValidate = YES;

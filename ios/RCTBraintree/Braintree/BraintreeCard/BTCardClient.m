@@ -69,13 +69,15 @@ NSString *const BTCardClientErrorDomain = @"com.braintreepayments.BTCardClientEr
     if (request.card.parameters) {
         NSMutableDictionary *mutableCardParameters = [request.card.parameters mutableCopy];
 
-        if (request.enrollmentAuthCode && request.enrollmentID) {
+        if (request.enrollmentID) {
             // Convert the immutable options dictionary so to write to it without overwriting any existing options
+            NSMutableDictionary *unionPayEnrollment = [NSMutableDictionary new];
+            unionPayEnrollment[@"id"] = request.enrollmentID;
+            if (request.smsCode) {
+                unionPayEnrollment[@"sms_code"] = request.smsCode;
+            }
             mutableCardParameters[@"options"] = [mutableCardParameters[@"options"] mutableCopy];
-            mutableCardParameters[@"options"][@"union_pay_enrollment"] = @{
-                                                                           @"id": request.enrollmentID,
-                                                                           @"sms_code": request.enrollmentAuthCode,
-                                                                           };
+            mutableCardParameters[@"options"][@"union_pay_enrollment"] = unionPayEnrollment;
         }
 
         parameters[@"credit_card"] = [mutableCardParameters copy];
@@ -88,7 +90,6 @@ NSString *const BTCardClientErrorDomain = @"com.braintreepayments.BTCardClientEr
     if (options) {
         parameters[@"options"] = options;
     }
-
     [self.apiClient POST:@"v1/payment_methods/credit_cards"
               parameters:parameters
               completion:^(BTJSON *body, __unused NSHTTPURLResponse *response, NSError *error)
@@ -98,11 +99,9 @@ NSString *const BTCardClientErrorDomain = @"com.braintreepayments.BTCardClientEr
              NSError *callbackError = error;
 
              if (response.statusCode == 422) {
-                 BTJSON *jsonResponse = error.userInfo[BTHTTPJSONResponseBodyKey];
-                 NSDictionary *userInfo = jsonResponse.asDictionary ? @{ BTCustomerInputBraintreeValidationErrorsKey : jsonResponse.asDictionary } : @{};
                  callbackError = [NSError errorWithDomain:BTCardClientErrorDomain
                                                      code:BTCardClientErrorTypeCustomerInputInvalid
-                                                 userInfo:userInfo];
+                                                 userInfo:[self.class validationErrorUserInfo:error.userInfo]];
              }
 
              if (request.enrollmentID) {
@@ -138,6 +137,27 @@ NSString *const BTCardClientErrorDomain = @"com.braintreepayments.BTCardClientEr
 - (void)sendUnionPayAnalyticsEvent:(BOOL)success {
     NSString *event = [NSString stringWithFormat:@"ios.%@.unionpay.nonce-%@", self.apiClient.metadata.integrationString, success ? @"received" : @"failed"];
     [self.apiClient sendAnalyticsEvent:event];
+}
+
+#pragma mark - Helpers
+
++ (NSDictionary *)validationErrorUserInfo:(NSDictionary *)userInfo {
+    NSMutableDictionary *mutableUserInfo = [userInfo mutableCopy];
+    BTJSON *jsonResponse = userInfo[BTHTTPJSONResponseBodyKey];
+    if ([jsonResponse asDictionary]) {
+        mutableUserInfo[BTCustomerInputBraintreeValidationErrorsKey] = [jsonResponse asDictionary];
+        
+        BTJSON *fieldError = [[jsonResponse[@"fieldErrors"] asArray] firstObject];
+        NSString *errorMessage = [jsonResponse[@"error"][@"message"] asString];
+        if (errorMessage) {
+            mutableUserInfo[NSLocalizedDescriptionKey] = errorMessage;
+        }
+        NSString *firstFieldErrorMessage = [fieldError[@"fieldErrors"] firstObject][@"message"];
+        if (firstFieldErrorMessage) {
+            mutableUserInfo[NSLocalizedFailureReasonErrorKey] = firstFieldErrorMessage;
+        }
+    }
+    return [mutableUserInfo copy];
 }
 
 @end
