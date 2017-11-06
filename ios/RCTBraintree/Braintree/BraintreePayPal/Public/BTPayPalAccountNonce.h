@@ -4,32 +4,57 @@
 #else
 #import <BraintreeCore/BraintreeCore.h>
 #endif
+#import "BTPayPalCreditFinancing.h"
 
 @interface BTPayPalAccountNonce : BTPaymentMethodNonce
 
-/// Payer's email address
+/*!
+ @brief Payer's email address
+*/
 @property (nonatomic, nullable, readonly, copy) NSString *email;
 
-/// Payer's first name.
+/*!
+ @brief Payer's first name.
+*/
 @property (nonatomic, nullable, readonly, copy) NSString *firstName;
 
-/// Payer's last name.
+/*!
+ @brief Payer's last name.
+*/
 @property (nonatomic, nullable, readonly, copy) NSString *lastName;
 
-/// Payer's phone number.
+/*!
+ @brief Payer's phone number.
+*/
 @property (nonatomic, nullable, readonly, copy) NSString *phone;
 
-/// The billing address.
+/*!
+ @brief The billing address.
+*/
 @property (nonatomic, nullable, readonly, strong) BTPostalAddress *billingAddress;
 
-/// The shipping address.
+/*!
+ @brief The shipping address.
+*/
 @property (nonatomic, nullable, readonly, strong) BTPostalAddress *shippingAddress;
 
-/// Client Metadata Id associated with this transaction.
+/*!
+ @brief Client Metadata Id associated with this transaction.
+*/
 @property (nonatomic, nullable, readonly, copy) NSString *clientMetadataId;
 
-/// Optional. Payer Id associated with this transaction.
-/// Will be provided for Billing Agreement and Checkout.
+/*!
+ @brief Optional. Payer Id associated with this transaction.
+
+ @discussion Will be provided for Billing Agreement and Checkout.
+*/
 @property (nonatomic, nullable, readonly, copy) NSString *payerId;
+
+/*!
+ @brief Optional. Credit financing details if the customer pays with PayPal Credit.
+
+ @discussion Will be provided for Billing Agreement and Checkout.
+ */
+@property (nonatomic, nullable, readonly, strong) BTPayPalCreditFinancing *creditFinancing;
 
 @end

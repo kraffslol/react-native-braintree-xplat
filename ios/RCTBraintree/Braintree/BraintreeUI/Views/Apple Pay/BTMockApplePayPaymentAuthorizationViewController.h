@@ -1,4 +1,3 @@
-#if BT_ENABLE_APPLE_PAY
 #import <UIKit/UIKit.h>
 @import PassKit;
 
@@ -8,7 +7,7 @@
 
 @property (nonatomic, weak) id<BTMockApplePayPaymentAuthorizationViewControllerDelegate> delegate;
 
-- (instancetype)initWithPaymentRequest:(PKPaymentRequest *)request NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithPaymentRequest:(PKPaymentRequest *)request NS_AVAILABLE_IOS(8_0);
 
 + (BOOL)canMakePayments;
 
@@ -18,9 +17,8 @@
 
 - (void)mockApplePayPaymentAuthorizationViewController:(BTMockApplePayPaymentAuthorizationViewController *)viewController
                                   didAuthorizePayment:(PKPayment *)payment
-                                           completion:(void (^)(PKPaymentAuthorizationStatus status))completion;
+                                           completion:(void (^)(PKPaymentAuthorizationStatus status))completion NS_AVAILABLE_IOS(8_0);
 
 - (void)mockApplePayPaymentAuthorizationViewControllerDidFinish:(BTMockApplePayPaymentAuthorizationViewController *)viewController;
 
 @end
-#endif

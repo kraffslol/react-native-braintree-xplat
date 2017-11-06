@@ -23,16 +23,17 @@
 #import "BTPayPalDriver_Internal.h"
 #import "BTVenmoDriver_Internal.h"
 #import "BTThreeDSecureDriver_Internal.h"
+#import "BTThreeDSecureAuthenticationViewController.h"
 #import "BTURLUtils.h"
 #import "FakePayPalClasses.h"
 #import "BTLogger_Internal.h"
-#import "DeviceCollectorSDK.h" // for testing Kount error codes
 #import "BTFakeHTTP.h"
 #import "BTDropInViewController_Internal.h"
 #import "BTPaymentButton_Internal.h"
 #import "BTThreeDSecureLookupResult.h"
 #import "Braintree-Version.h"
 #import "PPDataCollector_Internal.h"
+#import "BTDropInUtil.h"
 
 #import "BTSpecHelper.h"
 #import <OCMock/OCMock.h>

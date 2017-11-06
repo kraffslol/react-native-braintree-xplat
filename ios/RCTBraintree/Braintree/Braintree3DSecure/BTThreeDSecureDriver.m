@@ -22,6 +22,30 @@
 
 @implementation BTThreeDSecureDriver
 
++ (void)load {
+    if (self == [BTThreeDSecureDriver class]) {
+        [[BTTokenizationService sharedService] registerType:@"ThreeDSecure" withTokenizationBlock:^(BTAPIClient *apiClient, __unused NSDictionary *options, void (^completionBlock)(BTPaymentMethodNonce *paymentMethodNonce, NSError *error)) {
+            if (options[BTTokenizationServiceViewPresentingDelegateOption] == nil ||
+                [options[BTTokenizationServiceNonceOption] length] == 0 ||
+                options[BTTokenizationServiceAmountOption] == nil) {
+                NSError *error = [NSError errorWithDomain:BTTokenizationServiceErrorDomain
+                                                     code:BTTokenizationServiceErrorTypeNotRegistered
+                                                 userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Invalid parameters"],
+                                                            NSLocalizedFailureReasonErrorKey: [NSString stringWithFormat:@"BTThreeDSecureDriver has invalid parameters"],
+                                                            NSLocalizedRecoverySuggestionErrorKey: [NSString stringWithFormat:@"Check options parmeters"]
+                                                            }];
+                completionBlock(nil, error);
+            } else {
+                BTThreeDSecureDriver *driver = [[BTThreeDSecureDriver alloc] initWithAPIClient:apiClient delegate:options[BTTokenizationServiceViewPresentingDelegateOption]];
+
+                [driver verifyCardWithNonce:options[BTTokenizationServiceNonceOption]
+                                           amount:options[BTTokenizationServiceAmountOption]
+                                       completion:completionBlock];
+            }
+        }];
+    }
+}
+
 - (instancetype)init {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"-init is not available for BTThreeDSecureDriver. Use -initWithAPIClient:delegate: instead." userInfo:nil];
 }
@@ -167,18 +191,24 @@
 
     self.upgradedTokenizedCard = nil;
     self.completionBlockAfterAuthenticating(nil, error);
+    self.completionBlockAfterAuthenticating = nil;
+    [self informDelegateRequestsDismissalOfViewController:viewController];
 }
 
 - (void)threeDSecureViewControllerDidFinish:(BTThreeDSecureAuthenticationViewController *)viewController {
-    if (self.upgradedTokenizedCard) {
-        self.completionBlockAfterAuthenticating(self.upgradedTokenizedCard, nil);
-    } else {
-        self.completionBlockAfterAuthenticating(nil, nil);
-        [self.apiClient sendAnalyticsEvent:@"ios.threedsecure.canceled"];
-    }
+    if (self.completionBlockAfterAuthenticating != nil) {
+        if (self.upgradedTokenizedCard) {
+            self.completionBlockAfterAuthenticating(self.upgradedTokenizedCard, nil);
+        } else {
+            self.completionBlockAfterAuthenticating(nil, nil);
+            [self.apiClient sendAnalyticsEvent:@"ios.threedsecure.canceled"];
+        }
 
-    self.completionBlockAfterAuthenticating = nil;
-    [self informDelegateRequestsDismissalOfViewController:viewController];
+        self.completionBlockAfterAuthenticating = nil;
+        [self informDelegateRequestsDismissalOfViewController:viewController];
+    } else {
+        [self.apiClient sendAnalyticsEvent:@"ios.threedsecure.error.finished-without-handler"];
+    }
 }
 
 - (void)threeDSecureViewController:(__unused BTThreeDSecureAuthenticationViewController *)viewController

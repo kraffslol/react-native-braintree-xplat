@@ -20,38 +20,41 @@ PODS:
   - AFNetworking/UIKit (2.6.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - CardIO (5.2.2)
-  - Expecta (1.0.5)
-  - FLEX (2.1.1)
-  - HockeySDK (3.8.5):
-    - HockeySDK/AllFeaturesLib (= 3.8.5)
-  - HockeySDK/AllFeaturesLib (3.8.5)
-  - InAppSettingsKit (2.6)
+  - BraintreeDropIn (99.99.99-github-master):
+    - BraintreeDropIn/DropIn (= 99.99.99-github-master)
+    - BraintreeDropIn/UIKit (= 99.99.99-github-master)
+  - BraintreeDropIn/DropIn (99.99.99-github-master):
+    - BraintreeDropIn/UIKit
+  - BraintreeDropIn/UIKit (99.99.99-github-master)
+  - CardIO (5.4.1)
+  - Expecta (1.0.6)
+  - FLEX (2.4.0)
+  - InAppSettingsKit (2.8.1)
   - iOS-Slide-Menu (1.5)
-  - NSURL+QueryDictionary (1.1.0)
-  - OCMock (3.2.2)
-  - OHHTTPStubs (4.6.0):
-    - OHHTTPStubs/Default (= 4.6.0)
-  - OHHTTPStubs/Core (4.6.0)
-  - OHHTTPStubs/Default (4.6.0):
+  - NSURL+QueryDictionary (1.2.0)
+  - OCMock (3.4)
+  - OHHTTPStubs (6.0.0):
+    - OHHTTPStubs/Default (= 6.0.0)
+  - OHHTTPStubs/Core (6.0.0)
+  - OHHTTPStubs/Default (6.0.0):
     - OHHTTPStubs/Core
     - OHHTTPStubs/JSON
     - OHHTTPStubs/NSURLSession
     - OHHTTPStubs/OHPathHelpers
-  - OHHTTPStubs/JSON (4.6.0):
+  - OHHTTPStubs/JSON (6.0.0):
     - OHHTTPStubs/Core
-  - OHHTTPStubs/NSURLSession (4.6.0):
+  - OHHTTPStubs/NSURLSession (6.0.0):
     - OHHTTPStubs/Core
-  - OHHTTPStubs/OHPathHelpers (4.6.0)
-  - PureLayout (3.0.1)
-  - Specta (1.0.5)
+  - OHHTTPStubs/OHPathHelpers (6.0.0)
+  - PureLayout (3.0.2)
+  - Specta (1.0.6)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.6.0)
+  - BraintreeDropIn (from `BraintreeDropIn.podspec`)
   - CardIO
   - Expecta
   - FLEX
-  - HockeySDK
   - InAppSettingsKit
   - iOS-Slide-Menu
   - NSURL+QueryDictionary (~> 1.0)
@@ -60,20 +63,29 @@ DEPENDENCIES:
   - PureLayout
   - Specta
 
+EXTERNAL SOURCES:
+  BraintreeDropIn:
+    :podspec: BraintreeDropIn.podspec
+
+CHECKOUT OPTIONS:
+  BraintreeDropIn:
+    :commit: 4fcdab20b9f0d20072b3fe53ccb941d06d41e274
+    :git: https://github.com/braintree/braintree-ios-drop-in.git
+
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
-  CardIO: 2460db0f4936f3441b08d51e3904b436d77ec8fc
-  Expecta: e1c022fcd33910b6be89c291d2775b3fe27a89fe
-  FLEX: 27b768fcae23a313a1eb115076d429180ca9b472
-  HockeySDK: dd11a2b9da3372fd025643bee5bc10c8c613d169
-  InAppSettingsKit: cc56d3ec45f11352a16d5b210da8a3fa1b9d05ed
+  BraintreeDropIn: 6664683a0e2f1c8de206f423f41c0bcdae935976
+  CardIO: 56983b39b62f495fc6dae9ad7cf875143df06443
+  Expecta: 3b6bd90a64b9a1dcb0b70aa0e10a7f8f631667d5
+  FLEX: bd1a39e55b56bb413b6f1b34b3c10a0dc44ef079
+  InAppSettingsKit: 94d2fba3ccd700fc4e32c6d09fabcc0af2426744
   iOS-Slide-Menu: 40b0cbd8916c42afc755f0869793cd09e7a32102
-  NSURL+QueryDictionary: dd0a5fec689a9b4780b6fa0e0225c01ca3ea653e
-  OCMock: 18c9b7e67d4c2770e95bb77a9cc1ae0c91fe3835
-  OHHTTPStubs: cb1aefbbeb4de4e741644455d4b945538e5248a2
-  PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
-  Specta: ac94d110b865115fe60ff2c6d7281053c6f8e8a2
+  NSURL+QueryDictionary: bae616404e2adf6409d3d5c02a093cbf44c8a236
+  OCMock: 35ae71d6a8fcc1b59434d561d1520b9dd4f15765
+  OHHTTPStubs: 752f9b11fd810a15162d50f11c06ff94f8e012eb
+  PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
+  Specta: f506f3a8361de16bc0dcf3b17b75e269072ba465
 
-PODFILE CHECKSUM: c23de6705a01a1741c52fd56605d7fa6b1a6534d
+PODFILE CHECKSUM: 5c0f6d7472cce11fd35b3c4a01b851c0799076c5
 
-COCOAPODS: 1.0.0
+COCOAPODS: 1.3.1

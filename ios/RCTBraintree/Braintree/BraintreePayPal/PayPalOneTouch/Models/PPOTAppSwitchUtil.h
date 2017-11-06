@@ -85,8 +85,10 @@ typedef NS_ENUM(NSUInteger, PPAppSwitchResponseType) {
 + (NSString *)bundleId;
 + (NSString *)bundleName;
 + (BOOL)isCallbackURLSchemeValid:(NSString *)callbackURLScheme;
-+ (BOOL)isAuthenticatorInstalledForTargetAppURLScheme:(NSString *)targetAppURLScheme;
-// handles urlencoding
+
+/*!
+ @brief handles urlencoding
+*/
 + (NSDictionary *)parseQueryString:(NSString *)query;
 
 + (NSURL *)URLAction:(NSString *)action
