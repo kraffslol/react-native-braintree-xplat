@@ -206,6 +206,9 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
             data.getSerializableExtra(BraintreePaymentActivity.EXTRA_ERROR_MESSAGE)
           );
           break;
+        case Activity.RESULT_CANCELED:
+          this.errorCallback.invoke("RESULT_CANCELED");
+          break;
         default:
           break;
       }
