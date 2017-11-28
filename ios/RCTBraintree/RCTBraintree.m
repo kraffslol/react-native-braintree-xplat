@@ -223,7 +223,7 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
 
 - (void)userDidCancelPayment {
     [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
-    self.callback(@[@"User cancelled payment", [NSNull null]]);
+    self.callback(@[@"USER_CANCELLATION", [NSNull null]]);
 }
 
 - (void)dropInViewControllerWillComplete:(BTDropInViewController *)viewController {
