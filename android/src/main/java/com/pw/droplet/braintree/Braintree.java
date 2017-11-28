@@ -66,7 +66,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
       this.mBraintreeFragment.addListener(new BraintreeCancelListener() {
         @Override
         public void onCancel(int requestCode) {
-          nonceErrorCallback("Canceled");
+          nonceErrorCallback("USER_CANCELLATION");
         }
       });
       this.mBraintreeFragment.addListener(new PaymentMethodNonceCreatedListener() {
@@ -207,7 +207,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
           );
           break;
         case Activity.RESULT_CANCELED:
-          this.errorCallback.invoke("RESULT_CANCELED");
+          this.errorCallback.invoke("USER_CANCELLATION");
           break;
         default:
           break;
