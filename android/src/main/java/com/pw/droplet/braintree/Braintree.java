@@ -87,7 +87,6 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
               BraintreeError numberError = cardErrors.errorFor("number");
               BraintreeError cvvError = cardErrors.errorFor("cvv");
               BraintreeError expirationDateError = cardErrors.errorFor("expirationDate");
-              BraintreeError expirationYearError = cardErrors.errorFor("expirationYear");
               BraintreeError postalCode = cardErrors.errorFor("postalCode");
 
               if (numberError != null) {
@@ -100,10 +99,6 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
 
               if (expirationDateError != null) {
                 errors.put("expiration_date", expirationDateError.getMessage());
-              }
-
-              if (expirationYearError != null) {
-                errors.put("expiration_year", expirationYearError.getMessage());
               }
 
               // TODO add more fields
@@ -139,12 +134,8 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
     if (parameters.hasKey("cvv"))
       cardBuilder.cvv(parameters.getString("cvv"));
 
-    if (parameters.hasKey("expirationMonth"))
-      cardBuilder.expirationMonth(parameters.getString("expirationMonth"));
-
-    if (parameters.hasKey("expirationYear"))
-      cardBuilder.expirationYear(parameters.getString("expirationYear"));
-
+    // In order to keep compatibility with iOS implementation, do not accept expirationMonth and exporationYear,
+    // accept rather expirationDate (which is combination of expirationMonth/expirationYear)
     if (parameters.hasKey("expirationDate"))
       cardBuilder.expirationDate(parameters.getString("expirationDate"));
 
