@@ -20,8 +20,6 @@ export function mapParameters(
   return {
     number: parameters.number,
     cvv: parameters.cvv,
-    // expirationMonth: parameters.expirationMonth,
-    // expirationYear: parameters.expirationYear,
     expirationDate: parameters.expirationDate,
     cardholderName: parameters.cardholderName,
     billingAddress: {
