@@ -57,7 +57,7 @@ var Braintree = {
           //
         }
 
-        nonce != null
+        nonce !== null
           ? resolve(nonce)
           : reject(
               jsonErr
