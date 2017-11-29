@@ -183,13 +183,40 @@ BTClient.showPayPalViewController().then(function(nonce) {
 
 ## Custom Integration
 If you only want to tokenize credit card information, you can use the following:
+
 ```js
-BTClient.getCardNonce("4111111111111111", "10", "20", "400").then(function(nonce) {
+const card = {
+  number: "4111111111111111",
+  expirationDate: "10/20", // or "10/2020" or any valid date
+  cvv: "400",
+}
+
+BTClient.getCardNonce(card).then(function(nonce) {
   //payment succeeded, pass nonce to server
 })
 .catch(function(err) {
   //error handling
 });
+
+// Full list of card parameters:
+type Card = {
+  number: string,
+  cvv: string,
+  expirationDate: string,
+  cardholderName: string,
+  firstName: string,
+  lastName: string,
+  company: string,
+  countryName: string,
+  countryCodeAlpha2: string,
+  countryCodeAlpha3: string,
+  countryCodeNumeric: string,
+  locality: string,
+  postalCode: string,
+  region: string,
+  streetAddress: string,
+  extendedAddress: string,
+}
 ```
 
 ## One Touch on iOS
@@ -232,14 +259,14 @@ If your app is built using iOS 9 as its Base SDK, then you must add URLs to a wh
   BTClient.setupWithURLScheme(token, 'your.bundle.id.payments');
   ```
   #### For xplat, you can do something like this:
-  
+
   ```js
-  
+
    if (Platform.OS === 'ios') {
         BTClient.setupWithURLScheme(token, 'your.bundle.id.payments');
     } else {
         BTClient.setup(token);
-    }  
+    }
   ```
 
 3. Add this delegate method (callback) to your AppDelegate.m
