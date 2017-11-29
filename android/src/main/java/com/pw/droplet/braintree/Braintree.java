@@ -88,6 +88,7 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
               BraintreeError cvvError = cardErrors.errorFor("cvv");
               BraintreeError expirationDateError = cardErrors.errorFor("expirationDate");
               BraintreeError expirationYearError = cardErrors.errorFor("expirationYear");
+              BraintreeError postalCode = cardErrors.errorFor("postalCode");
 
               if (numberError != null) {
                 errors.put("card_number", numberError.getMessage());
@@ -105,6 +106,11 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
                 errors.put("expiration_year", expirationYearError.getMessage());
               }
 
+              // TODO add more fields
+              if (postalCode != null) {
+                errors.put("postal_code", postalCode.getMessage());
+              }
+
               nonceErrorCallback(gson.toJson(errors));
             } else {
               nonceErrorCallback(errorWithResponse.getErrorResponse());
@@ -120,16 +126,66 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
   }
 
   @ReactMethod
-  public void getCardNonce(final String cardNumber, final String expirationMonth, final String expirationYear, final String cvv, final Callback successCallback, final Callback errorCallback) {
+  public void getCardNonce(final ReadableMap parameters, final Callback successCallback, final Callback errorCallback) {
     this.successCallback = successCallback;
     this.errorCallback = errorCallback;
 
     CardBuilder cardBuilder = new CardBuilder()
-      .cardNumber(cardNumber)
-      .expirationMonth(expirationMonth)
-      .expirationYear(expirationYear)
-      .cvv(cvv)
       .validate(true);
+
+      if (parameters.hasKey("number"))
+        cardBuilder.cardNumber(parameters.getString("number"));
+
+      if (parameters.hasKey("cvv"))
+        cardBuilder.cvv(parameters.getString("cvv"));
+
+      if (parameters.hasKey("expirationMonth"))
+        cardBuilder.expirationMonth(parameters.getString("expirationMonth"));
+
+      if (parameters.hasKey("expirationYear"))
+        cardBuilder.expirationYear(parameters.getString("expirationYear"));
+
+      if (parameters.hasKey("expirationDate"))
+        cardBuilder.expirationDate(parameters.getString("expirationDate"));
+
+      if (parameters.hasKey("cardholderName"))
+        cardBuilder.cardholderName(parameters.getString("cardholderName"));
+
+      if (parameters.hasKey("firstName"))
+        cardBuilder.firstName(parameters.getString("firstName"));
+
+      if (parameters.hasKey("lastName"))
+        cardBuilder.lastName(parameters.getString("lastName"));
+
+      if (parameters.hasKey("company"))
+        cardBuilder.company(parameters.getString("company"));
+
+      if (parameters.hasKey("countryName"))
+        cardBuilder.countryName(parameters.getString("countryName"));
+
+      if (parameters.hasKey("countryCodeAlpha2"))
+        cardBuilder.countryCodeAlpha2(parameters.getString("countryCodeAlpha2"));
+
+      if (parameters.hasKey("countryCodeAlpha3"))
+        cardBuilder.countryCodeAlpha3(parameters.getString("countryCodeAlpha3"));
+
+      if (parameters.hasKey("countryCodeNumeric"))
+        cardBuilder.countryCodeNumeric(parameters.getString("countryCodeNumeric"));
+
+      if (parameters.hasKey("locality"))
+        cardBuilder.locality(parameters.getString("locality"));
+
+      if (parameters.hasKey("postalCode"))
+        cardBuilder.postalCode(parameters.getString("postalCode"));
+
+      if (parameters.hasKey("region"))
+        cardBuilder.region(parameters.getString("region"));
+
+      if (parameters.hasKey("streetAddress"))
+        cardBuilder.streetAddress(parameters.getString("streetAddress"));
+
+      if (parameters.hasKey("extendedAddress"))
+        cardBuilder.extendedAddress(parameters.getString("extendedAddress"));
 
     Card.tokenize(this.mBraintreeFragment, cardBuilder);
   }
