@@ -7,7 +7,6 @@
 //
 
 #import "RCTBraintree.h"
-#import "RCTConvert.h"
 
 @implementation RCTBraintree {
     bool runCallback;
