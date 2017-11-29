@@ -1,6 +1,12 @@
+// @flow
+
 'use strict';
 
 import { NativeModules, processColor } from 'react-native';
+import { mapParameters } from './utils';
+
+import type { CardParameters } from './types';
+
 const RCTBraintree = NativeModules.Braintree;
 
 var Braintree = {
@@ -46,9 +52,12 @@ var Braintree = {
     });
   },
 
-  getCardNonce(parameters = {}) {
+  getCardNonce(parameters: CardParameters = {}) {
     return new Promise(function(resolve, reject) {
-      RCTBraintree.getCardNonce(parameters, function(err, nonce) {
+      RCTBraintree.getCardNonce(mapParameters(parameters), function(
+        err,
+        nonce
+      ) {
         let jsonErr = null;
 
         try {
