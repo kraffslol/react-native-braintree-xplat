@@ -22,7 +22,7 @@ import com.braintreepayments.api.Card;
 import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.interfaces.BraintreeErrorListener;
-
+import com.braintreepayments.api.interfaces.BraintreeCancelListener;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -73,6 +73,12 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
         @Override
         public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
           nonceCallback(paymentMethodNonce.getNonce());
+        }
+      });
+      this.mBraintreeFragment.addListener(new BraintreeCancelListener() {
+        @Override
+        public void onCancel(int requestCode){
+          nonceErrorCallback("REQUEST_CANCELED");
         }
       });
       this.mBraintreeFragment.addListener(new BraintreeErrorListener() {
