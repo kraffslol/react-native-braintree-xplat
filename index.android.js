@@ -1,7 +1,9 @@
 'use strict';
 
-import {NativeModules, processColor} from 'react-native';
-var Braintree = NativeModules.Braintree;
+import { NativeModules } from 'react-native';
+import { mapParameters } from './utils';
+
+const Braintree = NativeModules.Braintree;
 
 module.exports = {
   setup(token) {
@@ -10,13 +12,10 @@ module.exports = {
     });
   },
 
-  getCardNonce(cardNumber, expirationMonth, expirationYear, cvv) {
+  getCardNonce(parameters = {}) {
     return new Promise(function(resolve, reject) {
       Braintree.getCardNonce(
-        cardNumber,
-        expirationMonth,
-        expirationYear,
-        cvv,
+        mapParameters(parameters),
         nonce => resolve(nonce),
         err => reject(err)
       );

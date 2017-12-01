@@ -1,7 +1,13 @@
+// @flow
+
 'use strict';
 
-import {NativeModules, processColor} from 'react-native';
-var RCTBraintree = NativeModules.Braintree;
+import { NativeModules, processColor } from 'react-native';
+import { mapParameters } from './utils';
+
+import type { CardParameters } from './types';
+
+const RCTBraintree = NativeModules.Braintree;
 
 var Braintree = {
   setupWithURLScheme(token, urlscheme) {
@@ -46,17 +52,29 @@ var Braintree = {
     });
   },
 
-  getCardNonce(cardNumber, expirationMonth, expirationYear, cvv) {
+  getCardNonce(parameters: CardParameters = {}) {
     return new Promise(function(resolve, reject) {
-      RCTBraintree.getCardNonce(
-        cardNumber,
-        expirationMonth,
-        expirationYear,
-        cvv,
-        function(err, nonce) {
-          nonce != null ? resolve(nonce) : reject(err);
+      RCTBraintree.getCardNonce(mapParameters(parameters), function(
+        err,
+        nonce
+      ) {
+        let jsonErr = null;
+
+        try {
+          jsonErr = JSON.parse(err);
+        } catch (e) {
+          //
         }
-      );
+
+        nonce !== null
+          ? resolve(nonce)
+          : reject(
+              jsonErr
+                ? jsonErr['BTCustomerInputBraintreeValidationErrorsKey'] ||
+                  jsonErr
+                : err
+            );
+      });
     });
   },
 
