@@ -23,6 +23,7 @@ import com.braintreepayments.api.Card;
 import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.interfaces.BraintreeErrorListener;
+import com.braintreepayments.api.models.CardNonce;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -75,7 +76,18 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
       this.mBraintreeFragment.addListener(new PaymentMethodNonceCreatedListener() {
         @Override
         public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
-          nonceCallback(paymentMethodNonce.getNonce());
+          if (threeDSecureOptions != null && paymentMethodNonce instanceof CardNonce) {
+            CardNonce cardNonce = (CardNonce) paymentMethodNonce;
+            if (!cardNonce.getThreeDSecureInfo().isLiabilityShiftPossible()) {
+              nonceErrorCallback("3DSECURE_NOT_ABLE_TO_SHIFT_LIABILITY");
+            } else if (!cardNonce.getThreeDSecureInfo().isLiabilityShifted()) {
+              nonceErrorCallback("3DSECURE_LIABILITY_NOT_SHIFTED");
+            } else {
+              nonceCallback(paymentMethodNonce.getNonce());
+            }
+          } else {
+            nonceCallback(paymentMethodNonce.getNonce());
+          }
         }
       });
       this.mBraintreeFragment.addListener(new BraintreeErrorListener() {
