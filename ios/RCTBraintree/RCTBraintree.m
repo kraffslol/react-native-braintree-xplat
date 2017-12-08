@@ -250,12 +250,18 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
                                             amount:self.threeDSecureOptions[@"amount"]
                                         completion:^(BTThreeDSecureCardNonce *card, NSError *error) {
                                             if (error) {
-                                                NSLog(@"Error");
-                                                return;
+                                                self.callback(@[error.localizedDescription, [NSNull null]]);
+                                            } else if (card) {
+                                                if (!card.liabilityShiftPossible) {
+                                                    self.callback(@[@"3DSECURE_NOT_ABLE_TO_SHIFT_LIABILITY", [NSNull null]]);
+                                                } else if (!card.liabilityShifted) {
+                                                    self.callback(@[@"3DSECURE_LIABILITY_NOT_SHIFTED", [NSNull null]]);
+                                                } else {
+                                                    self.callback(@[[NSNull null], card.nonce]);
+                                                }
+                                            } else {
+                                                self.callback(@[@"USER_CANCELLATION", [NSNull null]]);
                                             }
-
-                                            NSLog(@"Success");
-                                            self.callback(@[[NSNull null], paymentMethodNonce.nonce]);
                                             [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
                                         }];
         } else {
