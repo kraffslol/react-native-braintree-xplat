@@ -36,6 +36,7 @@ var Braintree = {
       title: config.title,
       description: config.description,
       amount: config.amount,
+      threeDSecure: config.threeDSecure,
     };
     return new Promise(function(resolve, reject) {
       RCTBraintree.showPaymentViewController(options, function(err, nonce) {

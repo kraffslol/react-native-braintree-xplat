@@ -26,6 +26,7 @@
 @property (nonatomic, strong) BTDataCollector *dataCollector;
 
 @property (nonatomic, strong) RCTResponseSenderBlock callback;
+@property (nonatomic, strong) NSDictionary *threeDSecureOptions;
 
 + (instancetype)sharedInstance;
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation;

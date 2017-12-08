@@ -61,8 +61,12 @@ RCT_EXPORT_METHOD(setup:(NSString *)clientToken callback:(RCTResponseSenderBlock
 RCT_EXPORT_METHOD(showPaymentViewController:(NSDictionary *)options callback:(RCTResponseSenderBlock)callback)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        self.threeDSecureOptions = options[@"threeDSecure"];
+        if (self.threeDSecureOptions) {
+            self.threeDSecure = [[BTThreeDSecureDriver alloc] initWithAPIClient:self.braintreeClient delegate:self];
+        }
+
         BTDropInViewController *dropInViewController = [[BTDropInViewController alloc] initWithAPIClient:self.braintreeClient];
-        self.threeDSecure = [[BTThreeDSecureDriver alloc] initWithAPIClient:self.braintreeClient delegate:self];
         dropInViewController.delegate = self;
 
         NSLog(@"%@", options);
@@ -241,18 +245,26 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
     if (runCallback || ([paymentMethodNonce.type isEqualToString:@"PayPal"] && [viewController.paymentMethodNonces count] == 1)) {
         runCallback = FALSE;
         
-        [self.threeDSecure verifyCardWithNonce:paymentMethodNonce.nonce
-                                        amount:[NSDecimalNumber decimalNumberWithString:@"10"]
-                                    completion:^(BTThreeDSecureCardNonce *card, NSError *error) {
-                                        if (error) {
-                                            NSLog(@"Error");
-                                            return;
-                                        }
-                                        
-                                        NSLog(@"Success");
-                                        self.callback(@[[NSNull null],paymentMethodNonce.nonce]);
-                                        [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
-                                    }];
+        if (self.threeDSecure) {
+            [self.threeDSecure verifyCardWithNonce:paymentMethodNonce.nonce
+                                            amount:self.threeDSecureOptions[@"amount"]
+                                        completion:^(BTThreeDSecureCardNonce *card, NSError *error) {
+                                            if (error) {
+                                                NSLog(@"Error");
+                                                return;
+                                            }
+
+                                            NSLog(@"Success");
+                                            self.callback(@[[NSNull null], paymentMethodNonce.nonce]);
+                                            [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
+                                        }];
+        } else {
+            self.callback(@[[NSNull null], paymentMethodNonce.nonce]);
+        }
+    }
+    
+    if (!self.threeDSecure) {
+        [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
