@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.Context;
 import android.app.Activity;
 
+import com.braintreepayments.api.ThreeDSecure;
 import com.braintreepayments.api.PaymentRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.BraintreePaymentActivity;
@@ -40,6 +41,8 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
   private Context mActivityContext;
 
   private BraintreeFragment mBraintreeFragment;
+
+  private ReadableMap threeDSecureOptions;
 
   public Braintree(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -216,6 +219,10 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
       amount = options.getString("amount");
     }
 
+    if (options.hasKey("threeDSecure")) {
+      this.threeDSecureOptions = options.getMap("threeDSecure");
+    }
+
     paymentRequest = new PaymentRequest()
       .submitButtonText(callToActionText)
       .primaryDescription(title)
@@ -244,7 +251,12 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
           PaymentMethodNonce paymentMethodNonce = data.getParcelableExtra(
             BraintreePaymentActivity.EXTRA_PAYMENT_METHOD_NONCE
           );
-          this.successCallback.invoke(paymentMethodNonce.getNonce());
+
+          if (this.threeDSecureOptions != null) {
+            ThreeDSecure.performVerification(this.mBraintreeFragment, paymentMethodNonce.getNonce(), String.valueOf(this.threeDSecureOptions.getDouble("amount")));
+          } else {
+            this.successCallback.invoke(paymentMethodNonce.getNonce());
+          }
           break;
         case BraintreePaymentActivity.BRAINTREE_RESULT_DEVELOPER_ERROR:
         case BraintreePaymentActivity.BRAINTREE_RESULT_SERVER_ERROR:

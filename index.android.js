@@ -28,6 +28,7 @@ module.exports = {
       title: config.title,
       description: config.description,
       amount: config.amount,
+      threeDSecure: config.threeDSecure,
     };
     return new Promise(function(resolve, reject) {
       Braintree.paymentRequest(
