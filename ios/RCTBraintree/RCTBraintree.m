@@ -62,6 +62,7 @@ RCT_EXPORT_METHOD(showPaymentViewController:(NSDictionary *)options callback:(RC
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         BTDropInViewController *dropInViewController = [[BTDropInViewController alloc] initWithAPIClient:self.braintreeClient];
+        self.threeDSecure = [[BTThreeDSecureDriver alloc] initWithAPIClient:self.braintreeClient delegate:self];
         dropInViewController.delegate = self;
 
         NSLog(@"%@", options);
@@ -239,9 +240,20 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
     // when the user pays for the first time with paypal, dropInViewControllerWillComplete is never called, yet the callback should be invoked.  the second condition checks for that
     if (runCallback || ([paymentMethodNonce.type isEqualToString:@"PayPal"] && [viewController.paymentMethodNonces count] == 1)) {
         runCallback = FALSE;
-        self.callback(@[[NSNull null],paymentMethodNonce.nonce]);
+        
+        [self.threeDSecure verifyCardWithNonce:paymentMethodNonce.nonce
+                                        amount:[NSDecimalNumber decimalNumberWithString:@"10"]
+                                    completion:^(BTThreeDSecureCardNonce *card, NSError *error) {
+                                        if (error) {
+                                            NSLog(@"Error");
+                                            return;
+                                        }
+                                        
+                                        NSLog(@"Success");
+                                        self.callback(@[[NSNull null],paymentMethodNonce.nonce]);
+                                        [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
+                                    }];
     }
-    [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)dropInViewControllerDidCancel:(__unused BTDropInViewController *)viewController {
