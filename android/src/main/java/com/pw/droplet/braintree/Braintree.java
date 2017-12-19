@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.Context;
 import android.app.Activity;
 
+import com.braintreepayments.api.ThreeDSecure;
 import com.braintreepayments.api.PaymentRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.BraintreePaymentActivity;
@@ -22,6 +23,7 @@ import com.braintreepayments.api.Card;
 import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.interfaces.BraintreeErrorListener;
+import com.braintreepayments.api.models.CardNonce;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -40,6 +42,8 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
   private Context mActivityContext;
 
   private BraintreeFragment mBraintreeFragment;
+
+  private ReadableMap threeDSecureOptions;
 
   public Braintree(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -72,7 +76,18 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
       this.mBraintreeFragment.addListener(new PaymentMethodNonceCreatedListener() {
         @Override
         public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
-          nonceCallback(paymentMethodNonce.getNonce());
+          if (threeDSecureOptions != null && paymentMethodNonce instanceof CardNonce) {
+            CardNonce cardNonce = (CardNonce) paymentMethodNonce;
+            if (!cardNonce.getThreeDSecureInfo().isLiabilityShiftPossible()) {
+              nonceErrorCallback("3DSECURE_NOT_ABLE_TO_SHIFT_LIABILITY");
+            } else if (!cardNonce.getThreeDSecureInfo().isLiabilityShifted()) {
+              nonceErrorCallback("3DSECURE_LIABILITY_NOT_SHIFTED");
+            } else {
+              nonceCallback(paymentMethodNonce.getNonce());
+            }
+          } else {
+            nonceCallback(paymentMethodNonce.getNonce());
+          }
         }
       });
       this.mBraintreeFragment.addListener(new BraintreeErrorListener() {
@@ -216,6 +231,10 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
       amount = options.getString("amount");
     }
 
+    if (options.hasKey("threeDSecure")) {
+      this.threeDSecureOptions = options.getMap("threeDSecure");
+    }
+
     paymentRequest = new PaymentRequest()
       .submitButtonText(callToActionText)
       .primaryDescription(title)
@@ -244,7 +263,12 @@ public class Braintree extends ReactContextBaseJavaModule implements ActivityEve
           PaymentMethodNonce paymentMethodNonce = data.getParcelableExtra(
             BraintreePaymentActivity.EXTRA_PAYMENT_METHOD_NONCE
           );
-          this.successCallback.invoke(paymentMethodNonce.getNonce());
+
+          if (this.threeDSecureOptions != null) {
+            ThreeDSecure.performVerification(this.mBraintreeFragment, paymentMethodNonce.getNonce(), String.valueOf(this.threeDSecureOptions.getDouble("amount")));
+          } else {
+            this.successCallback.invoke(paymentMethodNonce.getNonce());
+          }
           break;
         case BraintreePaymentActivity.BRAINTREE_RESULT_DEVELOPER_ERROR:
         case BraintreePaymentActivity.BRAINTREE_RESULT_SERVER_ERROR:
