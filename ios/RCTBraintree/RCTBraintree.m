@@ -61,6 +61,11 @@ RCT_EXPORT_METHOD(setup:(NSString *)clientToken callback:(RCTResponseSenderBlock
 RCT_EXPORT_METHOD(showPaymentViewController:(NSDictionary *)options callback:(RCTResponseSenderBlock)callback)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        self.threeDSecureOptions = options[@"threeDSecure"];
+        if (self.threeDSecureOptions) {
+            self.threeDSecure = [[BTThreeDSecureDriver alloc] initWithAPIClient:self.braintreeClient delegate:self];
+        }
+
         BTDropInViewController *dropInViewController = [[BTDropInViewController alloc] initWithAPIClient:self.braintreeClient];
         dropInViewController.delegate = self;
 
@@ -228,6 +233,7 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
 
 - (void)userDidCancelPayment {
     [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
+    runCallback = FALSE;
     self.callback(@[@"USER_CANCELLATION", [NSNull null]]);
 }
 
@@ -238,10 +244,38 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
 - (void)dropInViewController:(BTDropInViewController *)viewController didSucceedWithTokenization:(BTPaymentMethodNonce *)paymentMethodNonce {
     // when the user pays for the first time with paypal, dropInViewControllerWillComplete is never called, yet the callback should be invoked.  the second condition checks for that
     if (runCallback || ([paymentMethodNonce.type isEqualToString:@"PayPal"] && [viewController.paymentMethodNonces count] == 1)) {
-        runCallback = FALSE;
-        self.callback(@[[NSNull null],paymentMethodNonce.nonce]);
+        if (self.threeDSecure) {
+            [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
+            [self.threeDSecure verifyCardWithNonce:paymentMethodNonce.nonce
+                                            amount:self.threeDSecureOptions[@"amount"]
+                                        completion:^(BTThreeDSecureCardNonce *card, NSError *error) {
+                                            if (runCallback) {
+                                                runCallback = FALSE;
+                                                if (error) {
+                                                    self.callback(@[error.localizedDescription, [NSNull null]]);
+                                                } else if (card) {
+                                                    if (!card.liabilityShiftPossible) {
+                                                        self.callback(@[@"3DSECURE_NOT_ABLE_TO_SHIFT_LIABILITY", [NSNull null]]);
+                                                    } else if (!card.liabilityShifted) {
+                                                        self.callback(@[@"3DSECURE_LIABILITY_NOT_SHIFTED", [NSNull null]]);
+                                                    } else {
+                                                        self.callback(@[[NSNull null], card.nonce]);
+                                                    }
+                                                } else {
+                                                    self.callback(@[@"USER_CANCELLATION", [NSNull null]]);
+                                                }
+                                            }
+                                            [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
+                                        }];
+        } else {
+            runCallback = FALSE;
+            self.callback(@[[NSNull null], paymentMethodNonce.nonce]);
+        }
     }
-    [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
+    
+    if (!self.threeDSecure) {
+        [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 - (void)dropInViewControllerDidCancel:(__unused BTDropInViewController *)viewController {
