@@ -153,19 +153,23 @@ BTClient.showPaymentViewController(options).then(function(nonce) {
   //error handling
 });
 ```
-**Options (iOS only)**
-- bgColor - Background color for the view.
-- tintColor - Tint color for the view.
-- barBgColor - Background color for the navbar.
-- barTintColor - Tint color for the navbar.
-- callToActionText - Text for call to action button. (Works for both Android and iOS)
+**Options**
+- [iOS] bgColor - Background color for the view.
+- [iOS] tintColor - Tint color for the view.
+- [iOS] barBgColor - Background color for the navbar.
+- [iOS] barTintColor - Tint color for the navbar.
+- [iOS] callToActionText - Text for call to action button. (Works for both Android and iOS)
+- threeDSecure - If you want to enable [3DSecure](https://developers.braintreepayments.com/guides/3d-secure/client-side/android/v2), pass an object with an `amount` key that takes a number value
 
 Example:
 ```js
 const options = {
   bgColor: '#FFF',
   tintColor: 'orange',
-  callToActionText: 'Save'
+  callToActionText: 'Save',
+  threeDSecure: {
+    amount: 1.0
+  }
 }
 ```
 
