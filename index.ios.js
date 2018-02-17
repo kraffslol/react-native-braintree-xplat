@@ -53,6 +53,14 @@ var Braintree = {
     });
   },
 
+  showVenmoViewController() {
+    return new Promise(function(resolve, reject) {
+      RCTBraintree.showVenmoViewController(function(err, nonce) {
+        nonce != null ? resolve(nonce) : reject(err);
+      });
+    });
+  },
+
   getCardNonce(parameters: CardParameters = {}) {
     return new Promise(function(resolve, reject) {
       RCTBraintree.getCardNonce(mapParameters(parameters), function(
