@@ -284,16 +284,12 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
 }
 
 - (UIViewController*)reactRoot {
-    UIViewController *root  = [UIApplication sharedApplication].keyWindow.rootViewController;
-    UIViewController *maybeModal = root.presentedViewController;
-
-    UIViewController *modalRoot = root;
-
-    if (maybeModal != nil) {
-        modalRoot = maybeModal;
+    UIViewController *root = [UIApplication sharedApplication].keyWindow.rootViewController;
+    while (root.presentedViewController) {
+        root = root.presentedViewController;
     }
 
-    return modalRoot;
+    return root;
 }
 
 @end
