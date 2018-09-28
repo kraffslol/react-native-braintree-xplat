@@ -209,6 +209,36 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
     });
 }
 
+RCT_EXPORT_METHOD(showApplePayViewController:(NSDictionary *)options callback:(RCTResponseSenderBlock)callback)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.callback = callback;
+        PKPaymentRequest *paymentRequest = [[PKPaymentRequest alloc] init];
+
+        paymentRequest.requiredBillingAddressFields = PKAddressFieldNone;
+        paymentRequest.shippingMethods = nil;
+        paymentRequest.requiredShippingAddressFields = PKAddressFieldNone;
+        paymentRequest.paymentSummaryItems = @[
+                                               [PKPaymentSummaryItem summaryItemWithLabel:@"SOME ITEM" amount:[NSDecimalNumber decimalNumberWithString:@"10"]],
+                                               [PKPaymentSummaryItem summaryItemWithLabel:@"BRAINTREE" amount:[NSDecimalNumber decimalNumberWithString:@"10"]]
+                                               ];
+
+        paymentRequest.merchantIdentifier = options[@"merchantIdentifier"];;
+        paymentRequest.supportedNetworks = @[PKPaymentNetworkVisa, PKPaymentNetworkMasterCard, PKPaymentNetworkAmex, PKPaymentNetworkDiscover];
+        paymentRequest.merchantCapabilities = PKMerchantCapability3DS;
+        paymentRequest.currencyCode = @"USD";
+        paymentRequest.countryCode = @"US";
+        if ([paymentRequest respondsToSelector:@selector(setShippingType:)]) {
+            paymentRequest.shippingType = PKShippingTypeDelivery;
+        }
+
+        PKPaymentAuthorizationViewController *viewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
+        viewController.delegate = self;
+
+        [self.reactRoot presentViewController:viewController animated:YES completion:nil];
+    });
+}
+
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
 
     if ([url.scheme localizedCaseInsensitiveCompare:URLScheme] == NSOrderedSame) {
@@ -272,7 +302,7 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
             self.callback(@[[NSNull null], paymentMethodNonce.nonce]);
         }
     }
-    
+
     if (!self.threeDSecure) {
         [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
     }
@@ -294,6 +324,38 @@ RCT_EXPORT_METHOD(getDeviceData:(NSDictionary *)options callback:(RCTResponseSen
     }
 
     return modalRoot;
+}
+
+#pragma mark PKPaymentAuthorizationViewControllerDelegate
+
+- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
+                       didAuthorizePayment:(PKPayment *)payment
+                                completion:(void (^)(PKPaymentAuthorizationStatus status))completion
+{
+    NSLog(@"paymentAuthorizationViewController:didAuthorizePayment");
+    BTApplePayClient *applePayClient = [[BTApplePayClient alloc] initWithAPIClient:self.braintreeClient];
+    [applePayClient tokenizeApplePayPayment:payment completion:^(BTApplePayCardNonce * _Nullable tokenizedApplePayPayment, NSError * _Nullable error) {
+        if (error) {
+            completion(PKPaymentAuthorizationStatusFailure);
+            self.callback(@[@"Error processing card", [NSNull null]]);
+        } else {
+            self.callback(@[[NSNull null], @{
+                                @"nonce": tokenizedApplePayPayment.nonce,
+                                @"type": tokenizedApplePayPayment.type,
+                                @"localizedDescription": tokenizedApplePayPayment.localizedDescription
+                                }]);
+            completion(PKPaymentAuthorizationStatusSuccess);
+        }
+    }];
+}
+
+- (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
+    // Just close the view controller. We either succeeded or the user hit cancel.
+    [self.reactRoot dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)paymentAuthorizationViewControllerWillAuthorizePayment:(PKPaymentAuthorizationViewController *)controller {
+    // Move along. Nothing to see here.
 }
 
 @end
