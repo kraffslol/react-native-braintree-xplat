@@ -214,14 +214,19 @@ RCT_EXPORT_METHOD(showApplePayViewController:(NSDictionary *)options callback:(R
     dispatch_async(dispatch_get_main_queue(), ^{
         self.callback = callback;
         PKPaymentRequest *paymentRequest = [[PKPaymentRequest alloc] init];
-
+        NSArray *items = options[@"paymentSummaryItems"];
+        NSLog(@"Options items: %@", items);
+        NSMutableArray *paymentSummaryItems = [NSMutableArray new];
+        for(NSDictionary *item in items) {
+            NSString *label = item[@"label"];
+            NSString *amount = [item[@"amount"] stringValue];
+            [paymentSummaryItems addObject:[PKPaymentSummaryItem summaryItemWithLabel:label amount:[NSDecimalNumber decimalNumberWithString:amount]]];
+        }
+        
         paymentRequest.requiredBillingAddressFields = PKAddressFieldNone;
         paymentRequest.shippingMethods = nil;
         paymentRequest.requiredShippingAddressFields = PKAddressFieldNone;
-        paymentRequest.paymentSummaryItems = @[
-                                               [PKPaymentSummaryItem summaryItemWithLabel:@"SOME ITEM" amount:[NSDecimalNumber decimalNumberWithString:@"10"]],
-                                               [PKPaymentSummaryItem summaryItemWithLabel:@"BRAINTREE" amount:[NSDecimalNumber decimalNumberWithString:@"10"]]
-                                               ];
+        paymentRequest.paymentSummaryItems = paymentSummaryItems;
 
         paymentRequest.merchantIdentifier = options[@"merchantIdentifier"];;
         paymentRequest.supportedNetworks = @[PKPaymentNetworkVisa, PKPaymentNetworkMasterCard, PKPaymentNetworkAmex, PKPaymentNetworkDiscover];
