@@ -144,6 +144,7 @@ RCT_EXPORT_METHOD(getCardNonce: (NSDictionary *)parameters callback: (RCTRespons
                       if ( error == nil ) {
                           args = @[[NSNull null], tokenizedCard.nonce];
                       } else {
+                          /*
                           NSError *serialisationErr;
                           NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[error userInfo]
                                                                              options:NSJSONWritingPrettyPrinted
@@ -155,6 +156,8 @@ RCT_EXPORT_METHOD(getCardNonce: (NSDictionary *)parameters callback: (RCTRespons
                               NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
                               args = @[jsonString, [NSNull null]];
                           }
+                          */
+                          args = @[[error localizedFailureReason], [NSNull null]];
                       }
 
                       callback(args);
