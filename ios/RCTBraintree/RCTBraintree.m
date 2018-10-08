@@ -144,9 +144,13 @@ RCT_EXPORT_METHOD(getCardNonce: (NSDictionary *)parameters callback: (RCTRespons
                       if ( error == nil ) {
                           args = @[[NSNull null], tokenizedCard.nonce];
                       } else {
-                          /*
+                          NSMutableDictionary *userInfo = [error.userInfo mutableCopy];
+                          
+                          [userInfo removeObjectForKey:@"com.braintreepayments.BTHTTPJSONResponseBodyKey"];
+                          [userInfo removeObjectForKey:@"com.braintreepayments.BTHTTPURLResponseKey"];
+                          
                           NSError *serialisationErr;
-                          NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[error userInfo]
+                          NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfo
                                                                              options:NSJSONWritingPrettyPrinted
                                                                                error:&serialisationErr];
 
@@ -156,8 +160,6 @@ RCT_EXPORT_METHOD(getCardNonce: (NSDictionary *)parameters callback: (RCTRespons
                               NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
                               args = @[jsonString, [NSNull null]];
                           }
-                          */
-                          args = @[[error localizedFailureReason], [NSNull null]];
                       }
 
                       callback(args);
