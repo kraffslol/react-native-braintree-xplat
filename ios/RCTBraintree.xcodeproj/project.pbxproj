@@ -339,7 +339,28 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
+				da,
+				de,
+				"en-AU",
+				"en-CA",
+				"en-GB",
+				es,
+				"es-ES",
+				fr,
+				"fr-CA",
+				"fr-FR",
+				he,
+				it,
+				nb,
+				nl,
+				pl,
+				pt,
+				ru,
+				sv,
+				tr,
+				"zh-Hans",
 			);
 			mainGroup = DE4F06C31D156AA8005F99CD;
 			productRefGroup = DE4F06CD1D156AA8005F99CD /* Products */;
