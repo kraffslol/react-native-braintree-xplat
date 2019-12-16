@@ -8,147 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DE4F06D21D156AA8005F99CD /* RCTBraintree.m in Sources */ = {isa = PBXBuildFile; fileRef = DE4F06D11D156AA8005F99CD /* RCTBraintree.m */; };
-		DE4F07921D15750D005F99CD /* UI.strings in Resources */ = {isa = PBXBuildFile; fileRef = DE4F07911D15750D005F99CD /* UI.strings */; };
-		DE4F07A91D15751E005F99CD /* Drop-In.strings in Resources */ = {isa = PBXBuildFile; fileRef = DE4F07A81D15751E005F99CD /* Drop-In.strings */; };
-		DE4F07C01D157533005F99CD /* Three-D-Secure.strings in Resources */ = {isa = PBXBuildFile; fileRef = DE4F07BF1D157533005F99CD /* Three-D-Secure.strings */; };
-		DE6D1C9D1D16F57600DA995F /* libBraintree.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE6D1C7E1D16F56100DA995F /* libBraintree.a */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		DE6D1C771D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A76B198B1B79707700452CFA;
-			remoteInfo = Demo;
-		};
-		DE6D1C791D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A7ABD6531B702FD800A1223C;
-			remoteInfo = IntegrationTests;
-		};
-		DE6D1C7B1D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 16CD2E9C1B4077FB00E68495;
-			remoteInfo = UnitTests;
-		};
-		DE6D1C7D1D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 417404491BB084D3008A5DEA;
-			remoteInfo = Braintree;
-		};
-		DE6D1C7F1D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2D941D881B5D9E8C0016EFB4;
-			remoteInfo = Braintree3DSecure;
-		};
-		DE6D1C811D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A7C889741B5EF5DE007A0E9C;
-			remoteInfo = BraintreeApplePay;
-		};
-		DE6D1C831D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A7C889901B5F043B007A0E9C;
-			remoteInfo = BraintreeCard;
-		};
-		DE6D1C851D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2DE12F091B59BE0100EA1BCF;
-			remoteInfo = BraintreeCore;
-		};
-		DE6D1C871D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A76D7C001BB1CAB00000FA6A;
-			remoteInfo = BraintreeDataCollector;
-		};
-		DE6D1C891D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2D941D381B59C76A0016EFB4;
-			remoteInfo = BraintreePayPal;
-		};
-		DE6D1C8B1D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A77AA29C1B618C7700217B73;
-			remoteInfo = BraintreeVenmo;
-		};
-		DE6D1C8D1D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A77344F71B7A93A10083EC8D;
-			remoteInfo = BraintreeUI;
-		};
-		DE6D1C8F1D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4164B9AC1C9B658E006AE861;
-			remoteInfo = BraintreeUnionPay;
-		};
-		DE6D1C911D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A50C3B051C19F55C00612D90;
-			remoteInfo = "PayPalDataCollector-StaticLibrary";
-		};
-		DE6D1C931D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A7B463051C3D9C2200048423;
-			remoteInfo = PayPalDataCollector;
-		};
-		DE6D1C951D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A50C3AD51C19F00600612D90;
-			remoteInfo = "PayPalOneTouch-StaticLibrary";
-		};
-		DE6D1C971D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A50C3B6F1C1A29C500612D90;
-			remoteInfo = PayPalOneTouch;
-		};
-		DE6D1C991D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7EDE47701CD2C3D00005E22B;
-			remoteInfo = PayPalUtils;
-		};
-		DE6D1C9B1D16F56100DA995F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 03F8B2661C23976000FD184B;
-			remoteInfo = UITests;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		DE4F06CA1D156AA8005F99CD /* CopyFiles */ = {
@@ -166,70 +26,6 @@
 		DE4F06CC1D156AA8005F99CD /* libRCTBraintree.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTBraintree.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE4F06CF1D156AA8005F99CD /* RCTBraintree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTBraintree.h; sourceTree = "<group>"; };
 		DE4F06D11D156AA8005F99CD /* RCTBraintree.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTBraintree.m; sourceTree = "<group>"; };
-		DE4F077C1D15750D005F99CD /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F077D1D15750D005F99CD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F077E1D15750D005F99CD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F077F1D15750D005F99CD /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = en_AU.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F07801D15750D005F99CD /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_CA; path = en_CA.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F07811D15750D005F99CD /* en_GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_GB; path = en_GB.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F07821D15750D005F99CD /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F07831D15750D005F99CD /* es_ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es_ES; path = es_ES.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F07841D15750D005F99CD /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F07851D15750D005F99CD /* fr_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr_CA; path = fr_CA.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F07861D15750D005F99CD /* fr_FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr_FR; path = fr_FR.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F07871D15750D005F99CD /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F07881D15750D005F99CD /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F07891D15750D005F99CD /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F078A1D15750D005F99CD /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F078B1D15750D005F99CD /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F078C1D15750D005F99CD /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F078D1D15750D005F99CD /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F078E1D15750D005F99CD /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F078F1D15750D005F99CD /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/UI.strings; sourceTree = "<group>"; };
-		DE4F07901D15750D005F99CD /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/UI.strings"; sourceTree = "<group>"; };
-		DE4F07931D15751E005F99CD /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = "da.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07941D15751E005F99CD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07951D15751E005F99CD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07961D15751E005F99CD /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = "en_AU.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07971D15751E005F99CD /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_CA; path = "en_CA.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07981D15751E005F99CD /* en_GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_GB; path = "en_GB.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07991D15751E005F99CD /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "es.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F079A1D15751E005F99CD /* es_ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es_ES; path = "es_ES.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F079B1D15751E005F99CD /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "fr.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F079C1D15751E005F99CD /* fr_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr_CA; path = "fr_CA.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F079D1D15751E005F99CD /* fr_FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr_FR; path = "fr_FR.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F079E1D15751E005F99CD /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = "he.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F079F1D15751E005F99CD /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "it.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07A01D15751E005F99CD /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = "nb.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07A11D15751E005F99CD /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = "nl.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07A21D15751E005F99CD /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "pl.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07A31D15751E005F99CD /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = "pt.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07A41D15751E005F99CD /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = "ru.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07A51D15751E005F99CD /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = "sv.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07A61D15751E005F99CD /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = "tr.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07A71D15751E005F99CD /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Drop-In.strings"; sourceTree = "<group>"; };
-		DE4F07AA1D157533005F99CD /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = "da.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07AB1D157533005F99CD /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07AC1D157533005F99CD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07AD1D157533005F99CD /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = "en_AU.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07AE1D157533005F99CD /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_CA; path = "en_CA.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07AF1D157533005F99CD /* en_GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_GB; path = "en_GB.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07B01D157533005F99CD /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "es.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07B11D157533005F99CD /* es_ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es_ES; path = "es_ES.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07B21D157533005F99CD /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "fr.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07B31D157533005F99CD /* fr_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr_CA; path = "fr_CA.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07B41D157533005F99CD /* fr_FR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr_FR; path = "fr_FR.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07B51D157533005F99CD /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = "he.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07B61D157533005F99CD /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "it.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07B71D157533005F99CD /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = "nb.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07B81D157533005F99CD /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = "nl.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07B91D157533005F99CD /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "pl.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07BA1D157533005F99CD /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = "pt.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07BB1D157533005F99CD /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = "ru.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07BC1D157533005F99CD /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = "sv.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07BD1D157533005F99CD /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = "tr.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE4F07BE1D157533005F99CD /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Three-D-Secure.strings"; sourceTree = "<group>"; };
-		DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Braintree.xcodeproj; path = RCTBraintree/Braintree/Braintree.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,7 +33,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE6D1C9D1D16F57600DA995F /* libBraintree.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,10 +42,6 @@
 		DE4F06C31D156AA8005F99CD = {
 			isa = PBXGroup;
 			children = (
-				DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */,
-				DE4F07BF1D157533005F99CD /* Three-D-Secure.strings */,
-				DE4F07A81D15751E005F99CD /* Drop-In.strings */,
-				DE4F07911D15750D005F99CD /* UI.strings */,
 				DE4F06CE1D156AA8005F99CD /* RCTBraintree */,
 				DE4F06CD1D156AA8005F99CD /* Products */,
 			);
@@ -271,32 +62,6 @@
 				DE4F06D11D156AA8005F99CD /* RCTBraintree.m */,
 			);
 			path = RCTBraintree;
-			sourceTree = "<group>";
-		};
-		DE6D1C621D16F56100DA995F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				DE6D1C781D16F56100DA995F /* Demo.app */,
-				DE6D1C7A1D16F56100DA995F /* IntegrationTests.xctest */,
-				DE6D1C7C1D16F56100DA995F /* UnitTests.xctest */,
-				DE6D1C7E1D16F56100DA995F /* libBraintree.a */,
-				DE6D1C801D16F56100DA995F /* Braintree3DSecure.framework */,
-				DE6D1C821D16F56100DA995F /* BraintreeApplePay.framework */,
-				DE6D1C841D16F56100DA995F /* BraintreeCard.framework */,
-				DE6D1C861D16F56100DA995F /* BraintreeCore.framework */,
-				DE6D1C881D16F56100DA995F /* BraintreeDataCollector.framework */,
-				DE6D1C8A1D16F56100DA995F /* BraintreePayPal.framework */,
-				DE6D1C8C1D16F56100DA995F /* BraintreeVenmo.framework */,
-				DE6D1C8E1D16F56100DA995F /* BraintreeUI.framework */,
-				DE6D1C901D16F56100DA995F /* BraintreeUnionPay.framework */,
-				DE6D1C921D16F56100DA995F /* libPayPalDataCollector-StaticLibrary.a */,
-				DE6D1C941D16F56100DA995F /* PayPalDataCollector.framework */,
-				DE6D1C961D16F56100DA995F /* libPayPalOneTouch-StaticLibrary.a */,
-				DE6D1C981D16F56100DA995F /* PayPalOneTouch.framework */,
-				DE6D1C9A1D16F56100DA995F /* PayPalUtils.framework */,
-				DE6D1C9C1D16F56100DA995F /* UITests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -339,17 +104,32 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
+				da,
+				de,
+				"en-AU",
+				"en-CA",
+				"en-GB",
+				es,
+				"es-ES",
+				fr,
+				"fr-CA",
+				"fr-FR",
+				he,
+				it,
+				nb,
+				nl,
+				pl,
+				pt,
+				ru,
+				sv,
+				tr,
+				"zh-Hans",
 			);
 			mainGroup = DE4F06C31D156AA8005F99CD;
 			productRefGroup = DE4F06CD1D156AA8005F99CD /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = DE6D1C621D16F56100DA995F /* Products */;
-					ProjectRef = DE6D1C611D16F56100DA995F /* Braintree.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				DE4F06CB1D156AA8005F99CD /* RCTBraintree */,
@@ -357,150 +137,11 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXReferenceProxy section */
-		DE6D1C781D16F56100DA995F /* Demo.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = Demo.app;
-			remoteRef = DE6D1C771D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C7A1D16F56100DA995F /* IntegrationTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = IntegrationTests.xctest;
-			remoteRef = DE6D1C791D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C7C1D16F56100DA995F /* UnitTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = UnitTests.xctest;
-			remoteRef = DE6D1C7B1D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C7E1D16F56100DA995F /* libBraintree.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libBraintree.a;
-			remoteRef = DE6D1C7D1D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C801D16F56100DA995F /* Braintree3DSecure.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Braintree3DSecure.framework;
-			remoteRef = DE6D1C7F1D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C821D16F56100DA995F /* BraintreeApplePay.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = BraintreeApplePay.framework;
-			remoteRef = DE6D1C811D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C841D16F56100DA995F /* BraintreeCard.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = BraintreeCard.framework;
-			remoteRef = DE6D1C831D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C861D16F56100DA995F /* BraintreeCore.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = BraintreeCore.framework;
-			remoteRef = DE6D1C851D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C881D16F56100DA995F /* BraintreeDataCollector.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = BraintreeDataCollector.framework;
-			remoteRef = DE6D1C871D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C8A1D16F56100DA995F /* BraintreePayPal.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = BraintreePayPal.framework;
-			remoteRef = DE6D1C891D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C8C1D16F56100DA995F /* BraintreeVenmo.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = BraintreeVenmo.framework;
-			remoteRef = DE6D1C8B1D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C8E1D16F56100DA995F /* BraintreeUI.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = BraintreeUI.framework;
-			remoteRef = DE6D1C8D1D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C901D16F56100DA995F /* BraintreeUnionPay.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = BraintreeUnionPay.framework;
-			remoteRef = DE6D1C8F1D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C921D16F56100DA995F /* libPayPalDataCollector-StaticLibrary.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libPayPalDataCollector-StaticLibrary.a";
-			remoteRef = DE6D1C911D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C941D16F56100DA995F /* PayPalDataCollector.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = PayPalDataCollector.framework;
-			remoteRef = DE6D1C931D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C961D16F56100DA995F /* libPayPalOneTouch-StaticLibrary.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libPayPalOneTouch-StaticLibrary.a";
-			remoteRef = DE6D1C951D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C981D16F56100DA995F /* PayPalOneTouch.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = PayPalOneTouch.framework;
-			remoteRef = DE6D1C971D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C9A1D16F56100DA995F /* PayPalUtils.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = PayPalUtils.framework;
-			remoteRef = DE6D1C991D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DE6D1C9C1D16F56100DA995F /* UITests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = UITests.xctest;
-			remoteRef = DE6D1C9B1D16F56100DA995F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
-
 /* Begin PBXResourcesBuildPhase section */
 		DE4F077B1D1574FD005F99CD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE4F07921D15750D005F99CD /* UI.strings in Resources */,
-				DE4F07A91D15751E005F99CD /* Drop-In.strings in Resources */,
-				DE4F07C01D157533005F99CD /* Three-D-Secure.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,96 +157,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		DE4F07911D15750D005F99CD /* UI.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DE4F077C1D15750D005F99CD /* da */,
-				DE4F077D1D15750D005F99CD /* de */,
-				DE4F077E1D15750D005F99CD /* en */,
-				DE4F077F1D15750D005F99CD /* en_AU */,
-				DE4F07801D15750D005F99CD /* en_CA */,
-				DE4F07811D15750D005F99CD /* en_GB */,
-				DE4F07821D15750D005F99CD /* es */,
-				DE4F07831D15750D005F99CD /* es_ES */,
-				DE4F07841D15750D005F99CD /* fr */,
-				DE4F07851D15750D005F99CD /* fr_CA */,
-				DE4F07861D15750D005F99CD /* fr_FR */,
-				DE4F07871D15750D005F99CD /* he */,
-				DE4F07881D15750D005F99CD /* it */,
-				DE4F07891D15750D005F99CD /* nb */,
-				DE4F078A1D15750D005F99CD /* nl */,
-				DE4F078B1D15750D005F99CD /* pl */,
-				DE4F078C1D15750D005F99CD /* pt */,
-				DE4F078D1D15750D005F99CD /* ru */,
-				DE4F078E1D15750D005F99CD /* sv */,
-				DE4F078F1D15750D005F99CD /* tr */,
-				DE4F07901D15750D005F99CD /* zh-Hans */,
-			);
-			name = UI.strings;
-			path = Braintree/BraintreeUI/Localization/.;
-			sourceTree = "<group>";
-		};
-		DE4F07A81D15751E005F99CD /* Drop-In.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DE4F07931D15751E005F99CD /* da */,
-				DE4F07941D15751E005F99CD /* de */,
-				DE4F07951D15751E005F99CD /* en */,
-				DE4F07961D15751E005F99CD /* en_AU */,
-				DE4F07971D15751E005F99CD /* en_CA */,
-				DE4F07981D15751E005F99CD /* en_GB */,
-				DE4F07991D15751E005F99CD /* es */,
-				DE4F079A1D15751E005F99CD /* es_ES */,
-				DE4F079B1D15751E005F99CD /* fr */,
-				DE4F079C1D15751E005F99CD /* fr_CA */,
-				DE4F079D1D15751E005F99CD /* fr_FR */,
-				DE4F079E1D15751E005F99CD /* he */,
-				DE4F079F1D15751E005F99CD /* it */,
-				DE4F07A01D15751E005F99CD /* nb */,
-				DE4F07A11D15751E005F99CD /* nl */,
-				DE4F07A21D15751E005F99CD /* pl */,
-				DE4F07A31D15751E005F99CD /* pt */,
-				DE4F07A41D15751E005F99CD /* ru */,
-				DE4F07A51D15751E005F99CD /* sv */,
-				DE4F07A61D15751E005F99CD /* tr */,
-				DE4F07A71D15751E005F99CD /* zh-Hans */,
-			);
-			name = "Drop-In.strings";
-			path = "Braintree/BraintreeUI/Drop-In/Localization/.";
-			sourceTree = "<group>";
-		};
-		DE4F07BF1D157533005F99CD /* Three-D-Secure.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DE4F07AA1D157533005F99CD /* da */,
-				DE4F07AB1D157533005F99CD /* de */,
-				DE4F07AC1D157533005F99CD /* en */,
-				DE4F07AD1D157533005F99CD /* en_AU */,
-				DE4F07AE1D157533005F99CD /* en_CA */,
-				DE4F07AF1D157533005F99CD /* en_GB */,
-				DE4F07B01D157533005F99CD /* es */,
-				DE4F07B11D157533005F99CD /* es_ES */,
-				DE4F07B21D157533005F99CD /* fr */,
-				DE4F07B31D157533005F99CD /* fr_CA */,
-				DE4F07B41D157533005F99CD /* fr_FR */,
-				DE4F07B51D157533005F99CD /* he */,
-				DE4F07B61D157533005F99CD /* it */,
-				DE4F07B71D157533005F99CD /* nb */,
-				DE4F07B81D157533005F99CD /* nl */,
-				DE4F07B91D157533005F99CD /* pl */,
-				DE4F07BA1D157533005F99CD /* pt */,
-				DE4F07BB1D157533005F99CD /* ru */,
-				DE4F07BC1D157533005F99CD /* sv */,
-				DE4F07BD1D157533005F99CD /* tr */,
-				DE4F07BE1D157533005F99CD /* zh-Hans */,
-			);
-			name = "Three-D-Secure.strings";
-			path = Braintree/Braintree3DSecure/Localization/.;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		DE4F06D31D156AA8005F99CD /* Debug */ = {

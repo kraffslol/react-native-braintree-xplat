@@ -70,6 +70,10 @@ public class MainApplication extends Application implements ReactApplication {
 }
 
 ```
+#### Pay Pal 
+for Pay Pal browser switch setup is required  
+https://developers.braintreepayments.com/guides/client-sdk/setup/android/v2#browser-switch-setup
+
 ---
 ### RN 0.28 and under
 
