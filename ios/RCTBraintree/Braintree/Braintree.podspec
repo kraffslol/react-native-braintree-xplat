@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "Braintree"
-  s.version          = "4.3.2"
+  s.version          = "4.9.4"
   s.summary          = "Braintree v.zero: A modern foundation for accepting payments"
   s.description      = <<-DESC
                        Braintree is a full-stack payments platform for developers
@@ -9,9 +9,9 @@ Pod::Spec.new do |s|
 
                        Check out our development portal at https://developers.braintreepayments.com.
   DESC
-  s.homepage         = "https://www.braintreepayments.com/v.zero"
+  s.homepage         = "https://www.braintreepayments.com/how-braintree-works"
   s.documentation_url = "https://developers.braintreepayments.com/ios/start/hello-client"
-  s.screenshots      = "https://raw.githubusercontent.com/braintree/braintree_ios/master/screenshot.png"
+  s.screenshots      = "https://raw.githubusercontent.com/braintree/braintree_ios/master/Docs/screenshot.png"
   s.license          = "MIT"
   s.author           = { "Braintree" => "code@getbraintree.com" }
   s.source           = { :git => "https://github.com/braintree/braintree_ios.git", :tag => s.version.to_s }
@@ -47,6 +47,7 @@ Pod::Spec.new do |s|
     s.source_files = "BraintreeDataCollector/**/*.{h,m}"
     s.public_header_files = "BraintreeDataCollector/Public/*.h"
     s.vendored_library = "BraintreeDataCollector/Kount/libDeviceCollectorLibrary.a"
+    s.dependency "Braintree/Core"
   end
 
   s.subspec "PayPal" do |s|

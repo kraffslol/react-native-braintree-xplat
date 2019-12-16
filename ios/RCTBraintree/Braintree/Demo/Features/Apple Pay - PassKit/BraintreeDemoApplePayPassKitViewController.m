@@ -1,20 +1,38 @@
 #import "BraintreeDemoApplePayPassKitViewController.h"
 #import "BraintreeDemoSettings.h"
 #import <BraintreeApplePay/BraintreeApplePay.h>
+#import <PureLayout/PureLayout.h>
 
 @import PassKit;
 
 @interface BraintreeDemoApplePayPassKitViewController () <PKPaymentAuthorizationViewControllerDelegate>
+@property (nonatomic, strong) UILabel *label;
+@property (nonatomic, strong) BTApplePayClient *applePayClient;
 @end
 
 @implementation BraintreeDemoApplePayPassKitViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    self.applePayClient = [[BTApplePayClient alloc] initWithAPIClient:self.apiClient];
+
+    self.label = [[UILabel alloc] init];
+    self.label.numberOfLines = 1;
+    self.label.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.label];
+
+    if (self.paymentButton) {
+        [self.label autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.paymentButton withOffset:8];
+        [self.label autoPinEdgeToSuperviewEdge:ALEdgeLeft];
+        [self.label autoPinEdgeToSuperviewEdge:ALEdgeRight];
+        [self.label autoAlignAxisToSuperviewMarginAxis:ALAxisVertical];
+    }
+    
     self.title = @"Apple Pay via PassKit";
 }
 
-- (UIView *)createPaymentButton {
+- (UIControl *)createPaymentButton {
     if (![PKPaymentAuthorizationViewController class]) {
         self.progressBlock(@"Apple Pay is not available on this version of iOS");
         return nil;
@@ -26,8 +44,8 @@
 
     // Discover and PrivateLabel were added in iOS 9.0
     // At this time, we have not tested these options
-    if (![PKPaymentAuthorizationViewController canMakePaymentsUsingNetworks:@[PKPaymentNetworkAmex, PKPaymentNetworkMasterCard, PKPaymentNetworkVisa]]) {
-        self.progressBlock(@"canMakePaymentsUsingNetworks: returns NO, hiding Apple Pay button");
+    if (![PKPaymentAuthorizationViewController canMakePayments]) {
+        self.progressBlock(@"canMakePayments returns NO, hiding Apple Pay button");
         return nil;
     }
 
@@ -60,62 +78,84 @@
 - (void)tappedApplePayButton {
     self.progressBlock(@"Constructing PKPaymentRequest");
 
-    PKPaymentRequest *paymentRequest = [[PKPaymentRequest alloc] init];
+    [self.applePayClient paymentRequest:^(PKPaymentRequest * _Nullable paymentRequest, NSError * _Nullable error) {
+        if (error) {
+            self.progressBlock(error.localizedDescription);
+            return;
+        }
 
-    // Requiring PKAddressFieldPostalAddress crashes Simulator
-    //paymentRequest.requiredBillingAddressFields = PKAddressFieldName|PKAddressFieldPostalAddress;
-    paymentRequest.requiredBillingAddressFields = PKAddressFieldName;
+        // Requiring PKAddressFieldPostalAddress crashes Simulator
+        //paymentRequest.requiredBillingAddressFields = PKAddressFieldName|PKAddressFieldPostalAddress;
+        paymentRequest.requiredBillingAddressFields = PKAddressFieldName;
 
-    PKShippingMethod *shippingMethod1 = [PKShippingMethod summaryItemWithLabel:@"✈️ Fast Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"4.99"]];
-    shippingMethod1.detail = @"Fast but expensive";
-    shippingMethod1.identifier = @"fast";
-    PKShippingMethod *shippingMethod2 = [PKShippingMethod summaryItemWithLabel:@"🐢 Slow Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"0.00"]];
-    shippingMethod2.detail = @"Slow but free";
-    shippingMethod2.identifier = @"slow";
-    PKShippingMethod *shippingMethod3 = [PKShippingMethod summaryItemWithLabel:@"💣 Unavailable Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"0xdeadbeef"]];
-    shippingMethod3.detail = @"It will make Apple Pay fail";
-    shippingMethod3.identifier = @"fail";
-    paymentRequest.shippingMethods = @[shippingMethod1, shippingMethod2, shippingMethod3];
-    paymentRequest.requiredShippingAddressFields = PKAddressFieldAll;
-    paymentRequest.paymentSummaryItems = @[
-                                           [PKPaymentSummaryItem summaryItemWithLabel:@"SOME ITEM" amount:[NSDecimalNumber decimalNumberWithString:@"10"]],
-                                           [PKPaymentSummaryItem summaryItemWithLabel:@"SHIPPING" amount:shippingMethod1.amount],
-                                           [PKPaymentSummaryItem summaryItemWithLabel:@"BRAINTREE" amount:[NSDecimalNumber decimalNumberWithString:@"14.99"]]
-                                           ];
+        PKShippingMethod *shippingMethod1 = [PKShippingMethod summaryItemWithLabel:@"✈️ Fast Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"4.99"]];
+        shippingMethod1.detail = @"Fast but expensive";
+        shippingMethod1.identifier = @"fast";
+        PKShippingMethod *shippingMethod2 = [PKShippingMethod summaryItemWithLabel:@"🐢 Slow Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"0.00"]];
+        shippingMethod2.detail = @"Slow but free";
+        shippingMethod2.identifier = @"slow";
+        PKShippingMethod *shippingMethod3 = [PKShippingMethod summaryItemWithLabel:@"💣 Unavailable Shipping" amount:[NSDecimalNumber decimalNumberWithString:@"0xdeadbeef"]];
+        shippingMethod3.detail = @"It will make Apple Pay fail";
+        shippingMethod3.identifier = @"fail";
+        paymentRequest.shippingMethods = @[shippingMethod1, shippingMethod2, shippingMethod3];
+        paymentRequest.requiredShippingAddressFields = PKAddressFieldAll;
+        paymentRequest.paymentSummaryItems = @[
+                                               [PKPaymentSummaryItem summaryItemWithLabel:@"SOME ITEM" amount:[NSDecimalNumber decimalNumberWithString:@"10"]],
+                                               [PKPaymentSummaryItem summaryItemWithLabel:@"SHIPPING" amount:shippingMethod1.amount],
+                                               [PKPaymentSummaryItem summaryItemWithLabel:@"BRAINTREE" amount:[NSDecimalNumber decimalNumberWithString:@"14.99"]]
+                                               ];
 
-#ifdef __IPHONE_9_0
-    paymentRequest.supportedNetworks = @[PKPaymentNetworkVisa, PKPaymentNetworkMasterCard, PKPaymentNetworkAmex, PKPaymentNetworkDiscover];
-#else
-    paymentRequest.supportedNetworks = @[PKPaymentNetworkVisa, PKPaymentNetworkMasterCard, PKPaymentNetworkAmex];
-#endif
-    paymentRequest.merchantCapabilities = PKMerchantCapability3DS;
-    paymentRequest.currencyCode = @"USD";
-    paymentRequest.countryCode = @"US";
-    if ([paymentRequest respondsToSelector:@selector(setShippingType:)]) {
-        paymentRequest.shippingType = PKShippingTypeDelivery;
-    }
+        paymentRequest.merchantCapabilities = PKMerchantCapability3DS;
+        if ([paymentRequest respondsToSelector:@selector(setShippingType:)]) {
+            paymentRequest.shippingType = PKShippingTypeDelivery;
+        }
 
-    switch ([BraintreeDemoSettings currentEnvironment]) {
-        case BraintreeDemoTransactionServiceEnvironmentSandboxBraintreeSampleMerchant:
-            paymentRequest.merchantIdentifier = @"merchant.com.braintreepayments.sandbox.Braintree-Demo";
-            break;
-        case BraintreeDemoTransactionServiceEnvironmentProductionExecutiveSampleMerchant:
-            paymentRequest.merchantIdentifier = @"merchant.com.braintreepayments.Braintree-Demo";
-            break;
-        case BraintreeDemoTransactionServiceEnvironmentCustomMerchant:
-            self.progressBlock(@"Direct Apple Pay integration does not support custom environments in this Demo App");
-            break;
-    }
-
-    PKPaymentAuthorizationViewController *viewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
-    viewController.delegate = self;
-
-    self.progressBlock(@"Presenting Apple Pay Sheet");
-    [self presentViewController:viewController animated:YES completion:nil];
+        PKPaymentAuthorizationViewController *viewController = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
+        viewController.delegate = self;
+        
+        self.progressBlock(@"Presenting Apple Pay Sheet");
+        [self presentViewController:viewController animated:YES completion:nil];
+    }];
 }
 
 
 #pragma mark PKPaymentAuthorizationViewControllerDelegate
+
+- (void)paymentAuthorizationViewControllerDidFinish:(__unused PKPaymentAuthorizationViewController *)controller {
+    [controller dismissViewControllerAnimated:YES completion:nil];
+}
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000
+- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller didAuthorizePayment:(PKPayment *)payment handler:(void (^)(PKPaymentAuthorizationResult * _Nonnull))completion API_AVAILABLE(ios(11.0), watchos(4.0))  {
+    self.progressBlock(@"Apple Pay Did Authorize Payment");
+    [self.applePayClient tokenizeApplePayPayment:payment completion:^(BTApplePayCardNonce * _Nullable tokenizedApplePayPayment, NSError * _Nullable error) {
+        if (error) {
+            self.progressBlock(error.localizedDescription);
+            completion([[PKPaymentAuthorizationResult alloc] initWithStatus:PKPaymentAuthorizationStatusFailure errors:nil]);
+        } else {
+            self.label.text = tokenizedApplePayPayment.nonce;
+            self.completionBlock(tokenizedApplePayPayment);
+            completion([[PKPaymentAuthorizationResult alloc] initWithStatus:PKPaymentAuthorizationStatusSuccess errors:nil]);
+        }
+    }];
+}
+#endif
+
+- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
+                       didAuthorizePayment:(PKPayment *)payment
+                                completion:(void (^)(PKPaymentAuthorizationStatus status))completion {
+    self.progressBlock(@"Apple Pay Did Authorize Payment");
+    [self.applePayClient tokenizeApplePayPayment:payment completion:^(BTApplePayCardNonce * _Nullable tokenizedApplePayPayment, NSError * _Nullable error) {
+        if (error) {
+            self.progressBlock(error.localizedDescription);
+            completion(PKPaymentAuthorizationStatusFailure);
+        } else {
+            self.label.text = tokenizedApplePayPayment.nonce;
+            self.completionBlock(tokenizedApplePayPayment);
+            completion(PKPaymentAuthorizationStatusSuccess);
+        }
+    }];
+}
 
 - (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
                    didSelectShippingMethod:(PKShippingMethod *)shippingMethod
@@ -134,29 +174,6 @@
     } else {
         completion(PKPaymentAuthorizationStatusSuccess, @[testItem]);
     }
-}
-
-- (void)paymentAuthorizationViewController:(__unused PKPaymentAuthorizationViewController *)controller
-                       didAuthorizePayment:(PKPayment *)payment
-                                completion:(void (^)(PKPaymentAuthorizationStatus status))completion
-{
-    self.progressBlock(@"Apple Pay Did Authorize Payment");
-    BTApplePayClient *applePayClient = [[BTApplePayClient alloc] initWithAPIClient:self.apiClient];
-    [applePayClient tokenizeApplePayPayment:payment completion:^(BTApplePayCardNonce * _Nullable tokenizedApplePayPayment, NSError * _Nullable error) {
-        if (error) {
-            self.progressBlock(error.localizedDescription);
-            completion(PKPaymentAuthorizationStatusFailure);
-        } else {
-            self.completionBlock(tokenizedApplePayPayment);
-            completion(PKPaymentAuthorizationStatusSuccess);
-        }
-    }];
-}
-
-
-
-- (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
-    [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)paymentAuthorizationViewControllerWillAuthorizePayment:(__unused PKPaymentAuthorizationViewController *)controller {

@@ -1,24 +1,47 @@
 'use strict';
 
-import { NativeModules, processColor } from 'react-native';
-var Braintree = NativeModules.Braintree;
+import { NativeModules } from 'react-native';
+import { mapParameters } from './utils';
+
+const Braintree = NativeModules.Braintree;
 
 module.exports = {
   setup(token) {
     return new Promise(function(resolve, reject) {
-      Braintree.setup(token, (test) => resolve(test), (err) => reject(err));
+      Braintree.setup(token, test => resolve(test), err => reject(err));
     });
   },
 
-  getCardNonce(cardNumber, expirationMonth, expirationYear) {
+  getCardNonce(parameters = {}) {
     return new Promise(function(resolve, reject) {
-      Braintree.getCardNonce(cardNumber, expirationMonth, expirationYear, (nonce) => resolve(nonce), (err) => reject(err))
+      Braintree.getCardNonce(
+        mapParameters(parameters),
+        nonce => resolve(nonce),
+        err => reject(err)
+      );
     });
   },
 
-  showPaymentViewController() {
+  showPaymentViewController(config = {}) {
+    var options = {
+      callToActionText: config.callToActionText,
+      title: config.title,
+      description: config.description,
+      amount: config.amount,
+      threeDSecure: config.threeDSecure,
+    };
     return new Promise(function(resolve, reject) {
-      Braintree.paymentRequest((nonce) => resolve(nonce), (error) => reject(error));
+      Braintree.paymentRequest(
+        options,
+        nonce => resolve(nonce),
+        error => reject(error)
+      );
+    });
+  },
+
+  showPayPalViewController() {
+    return new Promise(function(resolve, reject) {
+      Braintree.paypalRequest(nonce => resolve(nonce), error => reject(error));
     });
   },
 };

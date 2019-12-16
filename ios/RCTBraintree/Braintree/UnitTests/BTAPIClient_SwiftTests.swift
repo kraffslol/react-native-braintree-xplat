@@ -18,38 +18,51 @@ class BTAPIClient_SwiftTests: XCTestCase {
     }
     
     func testAPIClientInitialization_withValidClientToken_returnsClientWithClientToken() {
-        let clientToken = BTTestClientTokenFactory.tokenWithVersion(2)
-        let apiClient = BTAPIClient(authorization: clientToken)
+        let clientToken = BTTestClientTokenFactory.token(withVersion: 2)
+        let apiClient = BTAPIClient(authorization: clientToken!)
         XCTAssertEqual(apiClient?.clientToken?.originalValue, clientToken)
     }
-    
+
+    func testAPIClientInitialization_withVersionThreeClientToken_returnsClientWithClientToken() {
+        let clientToken = BTTestClientTokenFactory.token(withVersion: 3)
+        let apiClient = BTAPIClient(authorization: clientToken!)
+        XCTAssertEqual(apiClient?.clientToken?.originalValue, clientToken)
+    }
+
+    func testAPIClientInitialization_withValidClientToken_performanceMeetsExpectations() {
+        let clientToken = BTTestClientTokenFactory.token(withVersion: 2)
+        self.measure() {
+            _ = BTAPIClient(authorization: clientToken!)
+        }
+    }
+
     // MARK: - Copy
 
     func testCopyWithSource_whenUsingClientToken_usesSameClientToken() {
-        let clientToken = BTTestClientTokenFactory.tokenWithVersion(2)
-        let apiClient = BTAPIClient(authorization: clientToken)
+        let clientToken = BTTestClientTokenFactory.token(withVersion: 2)
+        let apiClient = BTAPIClient(authorization: clientToken!)
 
-        let copiedApiClient = apiClient?.copyWithSource(.Unknown, integration: .Unknown)
+        let copiedApiClient = apiClient?.copy(with: .unknown, integration: .unknown)
 
         XCTAssertEqual(copiedApiClient?.clientToken?.originalValue, clientToken)
     }
 
     func testCopyWithSource_whenUsingTokenizationKey_usesSameTokenizationKey() {
         let apiClient = BTAPIClient(authorization: "development_testing_integration_merchant_id")
-        let copiedApiClient = apiClient?.copyWithSource(.Unknown, integration: .Unknown)
+        let copiedApiClient = apiClient?.copy(with: .unknown, integration: .unknown)
         XCTAssertEqual(copiedApiClient?.tokenizationKey, "development_testing_integration_merchant_id")
     }
 
     func testCopyWithSource_setsMetadataSourceAndIntegration() {
         let apiClient = BTAPIClient(authorization: "development_testing_integration_merchant_id")
-        let copiedApiClient = apiClient?.copyWithSource(.PayPalBrowser, integration: .DropIn)
-        XCTAssertEqual(copiedApiClient?.metadata.source, .PayPalBrowser)
-        XCTAssertEqual(copiedApiClient?.metadata.integration, .DropIn)
+        let copiedApiClient = apiClient?.copy(with: .payPalBrowser, integration: .dropIn)
+        XCTAssertEqual(copiedApiClient?.metadata.source, .payPalBrowser)
+        XCTAssertEqual(copiedApiClient?.metadata.integration, .dropIn)
     }
 
     func testCopyWithSource_copiesHTTP() {
         let apiClient = BTAPIClient(authorization: "development_testing_integration_merchant_id")
-        let copiedApiClient = apiClient?.copyWithSource(.PayPalBrowser, integration: .DropIn)
+        let copiedApiClient = apiClient?.copy(with: .payPalBrowser, integration: .dropIn)
         XCTAssertTrue(copiedApiClient !== apiClient)
     }
     
@@ -61,56 +74,57 @@ class BTAPIClient_SwiftTests: XCTestCase {
         mockHTTP.stubRequest("GET", toEndpoint: "/v1/configuration", respondWith: [], statusCode: 200)
         apiClient.configurationHTTP = mockHTTP
        
-        let expectation = expectationWithDescription("Callback invoked")
+        let expectation = self.expectation(description: "Callback invoked")
         apiClient.fetchOrReturnRemoteConfiguration() { _ in
             XCTAssertEqual(mockHTTP.lastRequestEndpoint, "v1/configuration")
             XCTAssertEqual(mockHTTP.lastRequestParameters?["configVersion"] as? String, "3")
             expectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
 
     // MARK: - fetchPaymentMethods
-    
+
     func testFetchPaymentMethods_performsGETWithCorrectParameter() {
         let apiClient = BTAPIClient(authorization: BTValidTestClientToken, sendAnalyticsEvent: false)!
         let mockHTTP = BTFakeHTTP()!
         mockHTTP.stubRequest("GET", toEndpoint: "/client_api/v1/payment_methods", respondWith: [], statusCode: 200)
         apiClient.http = mockHTTP
        
-        var expectation = expectationWithDescription("Callback invoked")
+        var expectation = self.expectation(description: "Callback invoked")
         apiClient.fetchPaymentMethodNonces() { _ in
             XCTAssertEqual(mockHTTP.lastRequestEndpoint, "v1/payment_methods")
-            XCTAssertFalse(mockHTTP.lastRequestParameters!["default_first"] as! Bool)
+            XCTAssertEqual(mockHTTP.lastRequestParameters!["default_first"] as? String, "false")
+            XCTAssertEqual(mockHTTP.lastRequestParameters!["session_id"] as? String, apiClient.metadata.sessionId)
             expectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
        
-        expectation = expectationWithDescription("Callback invoked")
+        expectation = self.expectation(description: "Callback invoked")
         apiClient.fetchPaymentMethodNonces(true) { _ in
             XCTAssertEqual(mockHTTP.lastRequestEndpoint, "v1/payment_methods")
-            XCTAssertTrue(mockHTTP.lastRequestParameters!["default_first"] as! Bool)
+            XCTAssertEqual(mockHTTP.lastRequestParameters!["default_first"] as? String, "true")
             expectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
         
-        expectation = expectationWithDescription("Callback invoked")
+        expectation = self.expectation(description: "Callback invoked")
         apiClient.fetchPaymentMethodNonces(false) { _ in
             XCTAssertEqual(mockHTTP.lastRequestEndpoint, "v1/payment_methods")
-            XCTAssertFalse(mockHTTP.lastRequestParameters!["default_first"] as! Bool)
+            XCTAssertEqual(mockHTTP.lastRequestParameters!["default_first"] as? String, "false")
             expectation.fulfill()
         }
         
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func testFetchPaymentMethods_returnsPaymentMethodNonces() {
         let apiClient = BTAPIClient(authorization: BTValidTestClientToken, sendAnalyticsEvent: false)!
         let stubHTTP = BTFakeHTTP()!
-        let stubbedResponse : [String : AnyObject] = [
+        let stubbedResponse = [
             "paymentMethods": [
                 [
                     "default" : true,
@@ -133,7 +147,7 @@ class BTAPIClient_SwiftTests: XCTestCase {
         stubHTTP.stubRequest("GET", toEndpoint: "/client_api/v1/payment_methods", respondWith: stubbedResponse, statusCode: 200)
         apiClient.http = stubHTTP
        
-        let expectation = expectationWithDescription("Callback invoked")
+        let expectation = self.expectation(description: "Callback invoked")
         apiClient.fetchPaymentMethodNonces() { (paymentMethodNonces, error) in
             guard let paymentMethodNonces = paymentMethodNonces else {
                 XCTFail()
@@ -164,27 +178,63 @@ class BTAPIClient_SwiftTests: XCTestCase {
             
             expectation.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(1, handler: nil)
+
+        waitForExpectations(timeout: 1, handler: nil)
     }
-    
+
     func testFetchPaymentMethods_withTokenizationKey_returnsError() {
         let apiClient = BTAPIClient(authorization: "development_tokenization_key", sendAnalyticsEvent: false)!
-        
-        let expectation = expectationWithDescription("Error returned")
+
+        let expectation = self.expectation(description: "Error returned")
         apiClient.fetchPaymentMethodNonces() { (paymentMethodNonces, error) -> Void in
-            guard let error = error else {
-                XCTFail()
-                return
-            }
-            
             XCTAssertNil(paymentMethodNonces);
-            XCTAssertEqual(error.domain, BTAPIClientErrorDomain);
-            XCTAssertEqual(error.code, BTAPIClientErrorType.NotAuthorized.rawValue);
+            guard let error = error as? NSError else {return}
+            XCTAssertEqual(error._domain, BTAPIClientErrorDomain);
+            XCTAssertEqual(error._code, BTAPIClientErrorType.notAuthorized.rawValue);
             expectation.fulfill()
         }
-        
-        waitForExpectationsWithTimeout(1, handler: nil)
+
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+
+    // MARK: - V3 Client Token
+
+    func testFetchPaymentMethods_performsGETWithCorrectParameter_withVersionThreeClientToken() {
+        let clientToken = BTTestClientTokenFactory.token(withVersion: 3)
+        let apiClient = BTAPIClient(authorization: clientToken!, sendAnalyticsEvent: false)!
+        let mockHTTP = BTFakeHTTP()!
+        mockHTTP.stubRequest("GET", toEndpoint: "/client_api/v1/payment_methods", respondWith: [], statusCode: 200)
+        apiClient.http = mockHTTP
+
+        XCTAssertEqual((apiClient.clientToken!.json["version"] as! BTJSON).asIntegerOrZero(), 3)
+
+        var expectation = self.expectation(description: "Callback invoked")
+        apiClient.fetchPaymentMethodNonces() { _ in
+            XCTAssertEqual(mockHTTP.lastRequestEndpoint, "v1/payment_methods")
+            XCTAssertEqual(mockHTTP.lastRequestParameters!["default_first"] as? String, "false")
+            XCTAssertEqual(mockHTTP.lastRequestParameters!["session_id"] as? String, apiClient.metadata.sessionId)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1, handler: nil)
+
+        expectation = self.expectation(description: "Callback invoked")
+        apiClient.fetchPaymentMethodNonces(true) { _ in
+            XCTAssertEqual(mockHTTP.lastRequestEndpoint, "v1/payment_methods")
+            XCTAssertEqual(mockHTTP.lastRequestParameters!["default_first"] as? String, "true")
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1, handler: nil)
+
+        expectation = self.expectation(description: "Callback invoked")
+        apiClient.fetchPaymentMethodNonces(false) { _ in
+            XCTAssertEqual(mockHTTP.lastRequestEndpoint, "v1/payment_methods")
+            XCTAssertEqual(mockHTTP.lastRequestParameters!["default_first"] as? String, "false")
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1, handler: nil)
     }
 
     // MARK: - Analytics

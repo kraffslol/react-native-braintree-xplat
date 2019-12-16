@@ -2,6 +2,9 @@
 #import "BTDropInLocalizedString.h"
 
 @interface BTDropInErrorAlert () <UIAlertViewDelegate>
+
+@property (nonatomic, copy, nullable) void (^dismissalHandler)(void);
+
 @end
 
 @implementation BTDropInErrorAlert
@@ -15,11 +18,16 @@
 }
 
 
-- (void)show {
+- (void)showWithDismissalHandler:(void (^)(void))dismissalHandler {
     NSString *localizedOK = BTDropInLocalizedString(ERROR_ALERT_OK_BUTTON_TEXT);
     NSString *localizedCancel = BTDropInLocalizedString(ERROR_ALERT_CANCEL_BUTTON_TEXT);
+    self.dismissalHandler = dismissalHandler;
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000
+    if (@available(iOS 8.0, *)) {
+#else
     if ([UIAlertController class]) {
+#endif
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:self.title message:self.message preferredStyle:UIAlertControllerStyleAlert];
 
         [alertController addAction:[UIAlertAction actionWithTitle:self.retryBlock ? localizedCancel : localizedOK
@@ -28,6 +36,9 @@
                                                               if (self.cancelBlock) {
                                                                   self.cancelBlock();
                                                               }
+                                                              if (self.dismissalHandler) {
+                                                                  self.dismissalHandler();
+                                                              }
                                                           }]];
         if (self.retryBlock) {
             [alertController addAction:[UIAlertAction actionWithTitle:BTDropInLocalizedString(ERROR_ALERT_TRY_AGAIN_BUTTON_TEXT)
@@ -35,6 +46,9 @@
                                                               handler:^(__unused UIAlertAction *action) {
                 if (self.retryBlock) {
                     self.retryBlock();
+                }
+                if (self.dismissalHandler) {
+                    self.dismissalHandler();
                 }
             }]];
         }
@@ -68,6 +82,7 @@
     } else if (buttonIndex == 1 && self.retryBlock) {
         self.retryBlock();
     }
+    self.dismissalHandler();
 }
 #pragma clang diagnostic pop
 

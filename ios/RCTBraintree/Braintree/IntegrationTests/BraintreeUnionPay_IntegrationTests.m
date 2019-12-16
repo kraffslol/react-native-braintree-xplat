@@ -27,7 +27,7 @@
         XCTAssertNil(error);
         XCTAssertFalse(cardCapabilities.isDebit);
         XCTAssertTrue(cardCapabilities.isUnionPay);
-        XCTAssertTrue(cardCapabilities.isUnionPayEnrollmentRequired);
+        XCTAssertTrue(cardCapabilities.isSupported);
         XCTAssertTrue(cardCapabilities.supportsTwoStepAuthAndCapture);
         [expectation fulfill];
     }];
@@ -42,7 +42,7 @@
     request.mobilePhoneNumber = @"12345678901";
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Callback invoked"];
-    [self.cardClient enrollCard:request completion:^(NSString * _Nullable enrollmentID, NSError * _Nullable error) {
+    [self.cardClient enrollCard:request completion:^(NSString * _Nullable enrollmentID, __unused BOOL smsCodeRequired, NSError * _Nullable error) {
         XCTAssertNil(error);
         XCTAssertTrue([enrollmentID isKindOfClass:[NSString class]]);
         [expectation fulfill];
@@ -58,7 +58,7 @@
     request.mobilePhoneNumber = @"12345678901";
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Callback invoked"];
-    [self.cardClient enrollCard:request completion:^(NSString * _Nullable enrollmentID, NSError * _Nullable error) {
+    [self.cardClient enrollCard:request completion:^(NSString * _Nullable enrollmentID, __unused BOOL smsCodeRequired, NSError * _Nullable error) {
         XCTAssertNil(enrollmentID);
         XCTAssertEqualObjects(error.domain, BTCardClientErrorDomain);
         XCTAssertEqual(error.code, BTCardClientErrorTypeCustomerInputInvalid);
@@ -75,10 +75,10 @@
     request.mobilePhoneNumber = @"12345678901";
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Callback invoked"];
-    [self.cardClient enrollCard:request completion:^(NSString * _Nullable enrollmentID, NSError * _Nullable error) {
+    [self.cardClient enrollCard:request completion:^(NSString * _Nullable enrollmentID, __unused BOOL smsCodeRequired, NSError * _Nullable error) {
         XCTAssertNil(error);
         request.enrollmentID = enrollmentID;
-        request.enrollmentAuthCode = @"11111";
+        request.smsCode = @"11111";
         [expectation fulfill];
     }];
 

@@ -1,6 +1,7 @@
 #import "BraintreeDemoAppDelegate.h"
 #import "BraintreeDemoSettings.h"
-#import <HockeySDK/HockeySDK.h>
+#import "BraintreeDemoSlideNavigationController.h"
+#import "BraintreeDemoDemoContainmentViewController.h"
 #import <BraintreeCore/BraintreeCore.h>
 
 #if DEBUG
@@ -12,21 +13,16 @@ NSString *BraintreeDemoAppDelegatePaymentsURLScheme = @"com.braintreepayments.De
 @implementation BraintreeDemoAppDelegate
 
 - (BOOL)application:(__unused UIApplication *)application didFinishLaunchingWithOptions:(__unused NSDictionary *)launchOptions {
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"7134982f3df6419a0eb52b16e7d6d175"];
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-    if ([[[NSProcessInfo processInfo] arguments] containsObject:@"-enableUpdateCheck"]) {
-        [[BITHockeyManager sharedHockeyManager] updateManager].checkForUpdateOnLaunch = YES;
-    } else {
-        [[BITHockeyManager sharedHockeyManager] updateManager].checkForUpdateOnLaunch = NO;
-    }
-    [[BITHockeyManager sharedHockeyManager] updateManager].updateSetting = BITUpdateCheckDaily;
-    
     [self setupAppearance];
     [self registerDefaultsFromSettings];
 
     [BTAppSwitch setReturnURLScheme:BraintreeDemoAppDelegatePaymentsURLScheme];
-
+    
+    BraintreeDemoDemoContainmentViewController *rootViewController = [[BraintreeDemoDemoContainmentViewController alloc] init];
+    BraintreeDemoSlideNavigationController *slideNav = [[BraintreeDemoSlideNavigationController alloc] initWithRootViewController:rootViewController];
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.rootViewController = slideNav;
+    [self.window makeKeyAndVisible];
     return YES;
 }
 
@@ -50,10 +46,6 @@ NSString *BraintreeDemoAppDelegatePaymentsURLScheme = @"com.braintreepayments.De
 - (void)setupAppearance {
     UIColor *pleasantGray = [UIColor colorWithWhite:42/255.0f alpha:1.0f];
 
-    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setBarTintColor:pleasantGray];
-    [[UINavigationBar appearance] setBarStyle:UIBarStyleBlackTranslucent];
-
     [[UIToolbar appearance] setBarTintColor:pleasantGray];
     [[UIToolbar appearance] setBarStyle:UIBarStyleBlackTranslucent];
 }
@@ -70,6 +62,8 @@ NSString *BraintreeDemoAppDelegatePaymentsURLScheme = @"com.braintreepayments.De
         [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"BraintreeDemoUseTokenizationKey"];
     }else if ([[[NSProcessInfo processInfo] arguments] containsObject:@"-ClientToken"]) {
         [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"BraintreeDemoUseTokenizationKey"];
+        // Use random users for testing with Client Tokens
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"BraintreeDemoCustomerIdentifier"];
     }
     
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"BraintreeDemoSettingsAuthorizationOverride"];
@@ -81,6 +75,12 @@ NSString *BraintreeDemoAppDelegatePaymentsURLScheme = @"com.braintreepayments.De
             NSString* testIntegration = [arg stringByReplacingOccurrencesOfString:@"-Authorization:" withString:@""];
             [[NSUserDefaults standardUserDefaults] setObject:testIntegration forKey:@"BraintreeDemoSettingsAuthorizationOverride"];
         }
+    }
+    
+    if ([[[NSProcessInfo processInfo] arguments] containsObject:@"-ClientTokenVersion2"]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"2" forKey:@"BraintreeDemoSettingsClientTokenVersionDefaultsKey"];
+    }else if ([[[NSProcessInfo processInfo] arguments] containsObject:@"-ClientTokenVersion3"]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"3" forKey:@"BraintreeDemoSettingsClientTokenVersionDefaultsKey"];
     }
     // End checking for testing arguments
     

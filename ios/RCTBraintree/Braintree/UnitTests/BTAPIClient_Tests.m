@@ -24,16 +24,19 @@
 
 @interface BTFakeAnalyticsService : BTAnalyticsService
 @property (nonatomic, copy) NSString *lastEvent;
+@property (nonatomic, assign) BOOL didLastFlush;
 @end
 
 @implementation BTFakeAnalyticsService
 
 - (void)sendAnalyticsEvent:(NSString *)eventKind {
     self.lastEvent = eventKind;
+    self.didLastFlush = NO;
 }
 
 - (void)sendAnalyticsEvent:(NSString *)eventKind completion:(__unused void (^)(NSError *))completionBlock {
     self.lastEvent = eventKind;
+    self.didLastFlush = YES;
 }
 
 @end
@@ -67,13 +70,13 @@
 
 - (void)testBaseURL_isDeterminedByTokenizationKey {
     BTAPIClient *apiClient = [[BTAPIClient alloc] initWithAuthorization:@"development_tokenization_key" sendAnalyticsEvent:NO];
-    XCTAssertEqualObjects(apiClient.http.baseURL.absoluteString, @"http://localhost:3000/merchants/key/client_api");
+    XCTAssertEqualObjects(apiClient.configurationHTTP.baseURL.absoluteString, @"http://localhost:3000/merchants/key/client_api");
 
     apiClient = [[BTAPIClient alloc] initWithAuthorization:@"sandbox_tokenization_key" sendAnalyticsEvent:NO];
-    XCTAssertEqualObjects(apiClient.http.baseURL.absoluteString, @"https://sandbox.braintreegateway.com/merchants/key/client_api");
+    XCTAssertEqualObjects(apiClient.configurationHTTP.baseURL.absoluteString, @"https://sandbox.braintreegateway.com/merchants/key/client_api");
 
     apiClient = [[BTAPIClient alloc] initWithAuthorization:@"production_tokenization_key" sendAnalyticsEvent:NO];
-    XCTAssertEqualObjects(apiClient.http.baseURL.absoluteString, @"https://api.braintreegateway.com:443/merchants/key/client_api");
+    XCTAssertEqualObjects(apiClient.configurationHTTP.baseURL.absoluteString, @"https://api.braintreegateway.com:443/merchants/key/client_api");
 }
 
 #pragma mark - Configuration
@@ -131,7 +134,8 @@
     apiClient.configurationHTTP = fake;
 
     [apiClient fetchOrReturnRemoteConfiguration:^(BTConfiguration *configuration, NSError *error) {
-        XCTAssertEqual(fake.GETRequestCount, (NSUInteger)1);
+        // BTAPIClient fetches the config when initialized so there can potentially be 2 requests here
+        XCTAssertLessThanOrEqual(fake.GETRequestCount, (NSUInteger)2);
         XCTAssertNil(configuration);
         XCTAssertEqual(error, anError);
         [expectation fulfill];
@@ -185,39 +189,8 @@
 
 #pragma mark - Payment option categories
 
-- (void)testIsVenmoEnabledIsFalse_withAccessToken_withBetaOverrideFalse {
-    BTAPIClient *apiClient = [self clientThatReturnsConfiguration:@{ @"payWithVenmo": @{@"accessToken" : @"access-token"}}];
-    [BTConfiguration enableVenmo:false];
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Fetch configuration"];
-    [apiClient fetchOrReturnRemoteConfiguration:^(BTConfiguration *configuration, NSError *error) {
-        XCTAssertNil(error);
-
-        XCTAssertFalse(configuration.isVenmoEnabled);
-        [expectation fulfill];
-    }];
-
-    [self waitForExpectationsWithTimeout:5 handler:nil];
-}
-
-- (void)testIsVenmoEnabledIsTrue_withAccessToken_withBetaOverrideTrue {
-    BTAPIClient *apiClient = [self clientThatReturnsConfiguration:@{ @"payWithVenmo": @{@"accessToken" : @"access-token"}}];
-    [BTConfiguration enableVenmo:true];
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Fetch configuration"];
-    [apiClient fetchOrReturnRemoteConfiguration:^(BTConfiguration *configuration, NSError *error) {
-        XCTAssertNil(error);
-        
-        XCTAssertTrue(configuration.isVenmoEnabled);
-        [expectation fulfill];
-    }];
-    
-    [self waitForExpectationsWithTimeout:5 handler:nil];
-}
-
-- (void)testIsVenmoEnabledIsFalse_withoutAccessToken_withBetaOverrideFalse {
+- (void)testIsVenmoEnabledIsFalse_withoutAccessToken {
     BTAPIClient *apiClient = [self clientThatReturnsConfiguration:@{ @"payWithVenmo": @{}}];
-    [BTConfiguration enableVenmo:false];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Fetch configuration"];
     [apiClient fetchOrReturnRemoteConfiguration:^(BTConfiguration *configuration, NSError *error) {
@@ -230,9 +203,8 @@
     [self waitForExpectationsWithTimeout:5 handler:nil];
 }
 
-- (void)testIsVenmoEnabledIsTrue_withoutAccessToken_withBetaOverrideTrue {
+- (void)testIsVenmoEnabledIsTrue_withoutAccessToken {
     BTAPIClient *apiClient = [self clientThatReturnsConfiguration:@{ @"payWithVenmo": @{}}];
-    [BTConfiguration enableVenmo:true];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Fetch configuration"];
     [apiClient fetchOrReturnRemoteConfiguration:^(BTConfiguration *configuration, NSError *error) {
@@ -336,7 +308,7 @@
     XCTAssertTrue([apiClient.analyticsService isKindOfClass:[BTAnalyticsService class]]);
 }
 
-- (void)testSendAnalyticsEvent_whenCalled_callsAnalyticsService {
+- (void)testSendAnalyticsEvent_whenCalled_callsAnalyticsService_doesFlush {
     BTAPIClient *apiClient = [[BTAPIClient alloc] initWithAuthorization:@"development_tokenization_key" sendAnalyticsEvent:NO];
     BTFakeAnalyticsService *mockAnalyticsService = [[BTFakeAnalyticsService alloc] init];
     apiClient.analyticsService = mockAnalyticsService;
@@ -344,6 +316,18 @@
     [apiClient sendAnalyticsEvent:@"blahblah"];
 
     XCTAssertEqualObjects(mockAnalyticsService.lastEvent, @"blahblah");
+    XCTAssertTrue(mockAnalyticsService.didLastFlush);
+}
+
+- (void)testQueueAnalyticsEvent_whenCalled_callsAnalyticsService_doesNotFlush {
+    BTAPIClient *apiClient = [[BTAPIClient alloc] initWithAuthorization:@"development_tokenization_key" sendAnalyticsEvent:NO];
+    BTFakeAnalyticsService *mockAnalyticsService = [[BTFakeAnalyticsService alloc] init];
+    apiClient.analyticsService = mockAnalyticsService;
+
+    [apiClient queueAnalyticsEvent:@"blahblahqueue"];
+
+    XCTAssertEqualObjects(mockAnalyticsService.lastEvent, @"blahblahqueue");
+    XCTAssertFalse(mockAnalyticsService.didLastFlush);
 }
 
 - (void)testPOST_usesMetadataSourceAndIntegration {

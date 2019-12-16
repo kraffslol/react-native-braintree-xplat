@@ -35,6 +35,9 @@
 
 @property (nonatomic, assign) BOOL originalCoinbaseStoreInVault;
 
+/// Used to strongly retain any BTDropInErrorAlert instances in case UIViewAlert is used
+@property (nonatomic, strong, nonnull) NSMutableSet *errorAlerts;
+
 @end
 
 @implementation BTDropInViewController
@@ -58,6 +61,8 @@
         self.selectedPaymentMethodNonceIndex = NSNotFound;
         self.dropInContentView.state = BTDropInContentViewStateActivity;
         self.fullForm = YES;
+
+        self.errorAlerts = [NSMutableSet set];
     }
     return self;
 }
@@ -108,7 +113,10 @@
         if (error) {
             BTDropInErrorAlert *errorAlert = [[BTDropInErrorAlert alloc] initWithPresentingViewController:self];
             errorAlert.title = error.localizedDescription ?: BTDropInLocalizedString(ERROR_ALERT_CONNECTION_ERROR);
-            [errorAlert show];
+            [self.errorAlerts addObject:errorAlert];
+            [errorAlert showWithDismissalHandler:^{
+                [self.errorAlerts removeObject:errorAlert];
+            }];
         }
 
         NSArray <NSString *> *challenges = [configuration.json[@"challenges"] asStringArray];
@@ -340,7 +348,10 @@
                             // Use the paymentMethodNonces setter to update state
                             weakSelf.paymentMethodNonces = weakSelf.paymentMethodNonces;
                         };
-                        [errorAlert show];
+                        [self.errorAlerts addObject:errorAlert];
+                        [errorAlert showWithDismissalHandler:^{
+                            [self.errorAlerts removeObject:errorAlert];
+                        }];
                     }
                     return;
                 }
@@ -348,10 +359,13 @@
                 [self informDelegateDidAddPaymentInfo:tokenizedCard];
             }];
         } else {
-            BTDropInErrorAlert *alert = [[BTDropInErrorAlert alloc] initWithPresentingViewController:self];
-            alert.title = BTDropInLocalizedString(ERROR_SAVING_CARD_ALERT_TITLE);
-            alert.message = BTDropInLocalizedString(ERROR_SAVING_CARD_MESSAGE);
-            [alert show];
+            BTDropInErrorAlert *errorAlert = [[BTDropInErrorAlert alloc] initWithPresentingViewController:self];
+            errorAlert.title = BTDropInLocalizedString(ERROR_SAVING_CARD_ALERT_TITLE);
+            errorAlert.message = BTDropInLocalizedString(ERROR_SAVING_CARD_MESSAGE);
+            [self.errorAlerts addObject:errorAlert];
+            [errorAlert showWithDismissalHandler:^{
+                [self.errorAlerts removeObject:errorAlert];
+            }];
         }
     }
 }
@@ -572,7 +586,7 @@
     }];
 }
 
-- (void)fetchPaymentMethodsOnCompletion:(void(^)())completionBlock {
+- (void)fetchPaymentMethodsOnCompletion:(void(^)(void))completionBlock {
     // Check for proper authorization before fetching payment methods to suppress errors when using tokenization key
     if (!self.apiClient.clientToken) {
         self.paymentMethodNonces = @[];
@@ -588,18 +602,21 @@
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 
         if (error) {
-             BTDropInErrorAlert *errorAlert = [[BTDropInErrorAlert alloc] initWithPresentingViewController:self];
-             errorAlert.title = error.localizedDescription;
-             BTJSON *errorBody = error.userInfo[BTHTTPJSONResponseBodyKey];
-             errorAlert.message = [errorBody[@"error"][@"message"] asString];
-             errorAlert.cancelBlock = ^{
-                 [self informDelegateDidCancel];
-                 if (completionBlock) completionBlock();
-             };
-             errorAlert.retryBlock = ^{
-                 [self fetchPaymentMethodsOnCompletion:completionBlock];
-             };
-             [errorAlert show];
+            BTDropInErrorAlert *errorAlert = [[BTDropInErrorAlert alloc] initWithPresentingViewController:self];
+            errorAlert.title = error.localizedDescription;
+            BTJSON *errorBody = error.userInfo[BTHTTPJSONResponseBodyKey];
+            errorAlert.message = [errorBody[@"error"][@"message"] asString];
+            errorAlert.cancelBlock = ^{
+                [self informDelegateDidCancel];
+                if (completionBlock) completionBlock();
+            };
+            errorAlert.retryBlock = ^{
+                [self fetchPaymentMethodsOnCompletion:completionBlock];
+            };
+            [self.errorAlerts addObject:errorAlert];
+            [errorAlert showWithDismissalHandler:^{
+                [self.errorAlerts removeObject:errorAlert];
+            }];
         } else {
             self.paymentMethodNonces = [paymentMethodNonces copy];
             if (completionBlock) {
@@ -665,12 +682,16 @@
         
         BTDropInErrorAlert *errorAlert = [[BTDropInErrorAlert alloc] initWithPresentingViewController:viewController];
         errorAlert.title = savePaymentMethodErrorAlertTitle;
+        errorAlert.message = error.localizedFailureReason;
         errorAlert.cancelBlock = ^{
             // Use the paymentMethodNonces setter to update state
             self.paymentMethodNonces = self.paymentMethodNonces;
         };
-        
-        [errorAlert show];
+
+        [self.errorAlerts addObject:errorAlert];
+        [errorAlert showWithDismissalHandler:^{
+            [self.errorAlerts removeObject:errorAlert];
+        }];
     } else if (paymentMethodNonce) {
         NSMutableArray *newPaymentMethods = [NSMutableArray arrayWithArray:self.paymentMethodNonces];
         [newPaymentMethods insertObject:paymentMethodNonce atIndex:0];
@@ -689,7 +710,8 @@
 #pragma mark - BTViewControllerPresentingDelegate
 
 - (void)paymentDriver:(__unused id)driver requestsPresentationOfViewController:(UIViewController *)viewController {
-    [self presentViewController:viewController animated:YES completion:nil];
+    UIViewController *presentingViewController = self.paymentRequest.presentViewControllersFromTop? [BTDropInUtil topViewController] : self;
+    [presentingViewController presentViewController:viewController animated:YES completion:nil];
 }
 
 - (void)paymentDriver:(__unused id)driver requestsDismissalOfViewController:(__unused UIViewController *)viewController {
