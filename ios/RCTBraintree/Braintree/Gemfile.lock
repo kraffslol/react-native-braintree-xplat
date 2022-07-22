@@ -102,7 +102,7 @@ GEM
     terminal-table (1.4.5)
     thread_safe (0.3.6)
     trollop (2.1.2)
-    tzinfo (1.2.3)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     xcodeproj (1.5.1)
       CFPropertyList (~> 2.3.3)
